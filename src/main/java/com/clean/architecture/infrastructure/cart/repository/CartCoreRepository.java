@@ -20,7 +20,12 @@ public class CartCoreRepository implements CartRepository {
 
     @Override
     public Optional<Cart> findByUserId(Long userId) {
-        return cartCustomRepository.findByUserId(userId);
+        if (userId == null) {
+            throw new IllegalArgumentException("userId can not be null");
+        }
+
+        Cart foundCart = cartCustomRepository.findByUserId(userId);
+        return Optional.ofNullable(foundCart);
     }
 
     @Override

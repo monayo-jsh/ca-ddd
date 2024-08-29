@@ -3,14 +3,19 @@ package com.clean.architecture.domain.cart.entity;
 import static jakarta.persistence.FetchType.LAZY;
 
 import com.clean.architecture.common.model.entity.BaseEntity;
+import com.clean.architecture.domain.user.entity.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -32,11 +37,13 @@ public class Cart extends BaseEntity {
 
     @Comment("장바구니 고유키")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Comment("사용자 고유키(참조)")
-    @Column(name = "user_id", nullable = false, updatable = false)
-    private Long userId; // User 도메인에 대한 참조 대신 userId 로 느슨한 결합
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private User user;
 
     @Comment("장바구니 이름")
     @Column(name = "name", nullable = false, length = 50)
@@ -56,12 +63,12 @@ public class Cart extends BaseEntity {
 
     protected Cart() {}
 
-    public Cart(Long userId) {
-        this.userId = userId;
+    public Cart(User user) {
+        this.user = user;
     }
 
-    public Cart(Long userId, List<CartItem> cartItems) {
-        this(userId);
+    public Cart(User user, List<CartItem> cartItems) {
+        this(user);
         changeCartItems(cartItems);
     }
 

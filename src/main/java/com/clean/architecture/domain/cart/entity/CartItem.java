@@ -25,6 +25,7 @@ public class CartItem {
 
     @Comment("장바구니 항목 고유키")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Comment("장바구니 고유키(참조)")
