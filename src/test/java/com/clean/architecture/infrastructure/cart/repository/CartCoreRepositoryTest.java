@@ -10,6 +10,8 @@ import com.clean.architecture.domain.cart.entity.CartItem;
 import com.clean.architecture.domain.user.entity.User;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,11 +32,16 @@ class CartCoreRepositoryTest {
     @Autowired
     private CartCoreRepository cartCoreRepository;
 
-    private final User testUser = new User(-1L);
+    private User testUser;
+
+    @BeforeEach
+    public void init() {
+        testUser = new User(new Random().nextLong());
+    }
 
     @Nested
     @DisplayName("장바구니 저장")
-    class testSave {
+    class SaveTests {
 
         @Test
         @DisplayName("하위 항목 없음")
@@ -87,7 +94,7 @@ class CartCoreRepositoryTest {
 
     @Nested
     @DisplayName("장바구니 조회")
-    class testFind {
+    class FindTests {
 
         @Test
         @DisplayName("사용자 아이디 null 전달")
@@ -130,7 +137,7 @@ class CartCoreRepositoryTest {
 
     @Nested
     @DisplayName("장바구니 삭제")
-    class testDelete {
+    class DeleteTests {
 
         @Test
         @DisplayName("하위 항목 없음")
