@@ -1,3 +1,13 @@
+server:
+  port: 8080
+
+# jpa query log
+decorator:
+  datasource:
+    p6spy:
+      logging: slf4j
+      enable-logging: true
+
 spring:
   application:
     name: ddd
@@ -11,12 +21,10 @@ spring:
     username: commerce
     password:
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
+        show_sql: false
     hibernate:
       ddl-auto: create-drop
-
-server:
-  port: 8080

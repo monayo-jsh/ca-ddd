@@ -1,12 +1,12 @@
 package com.clean.architecture.domain.cart.repository;
 
-import com.clean.architecture.domain.cart.entity.Cart;
+import com.clean.architecture.infrastructure.cart.persistence.entity.CartEntity;
 import java.util.Optional;
 
 public interface CartRepository {
 
-    Cart save(Cart cart);
-    Optional<Cart> findByUserId(Long userId);
+    CartEntity save(CartEntity cartEntity);
+    Optional<CartEntity> findByUserId(Long userId);
     void deleteById(Long id);
 
 }

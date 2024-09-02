@@ -1,11 +1,12 @@
 package com.clean.architecture.domain.user.repository;
 
-import com.clean.architecture.domain.user.entity.User;
+import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import java.util.Optional;
 
 public interface UserRepository {
 
-    User save(User user);
-    Optional<User> findByEmail(String email);
+    UserEntity save(UserEntity userEntity);
+    Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findById(Long userId);
 
 }
