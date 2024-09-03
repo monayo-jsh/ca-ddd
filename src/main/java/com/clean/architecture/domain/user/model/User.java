@@ -1,6 +1,7 @@
 package com.clean.architecture.domain.user.model;
 
 import com.clean.architecture.infrastructure.user.persistence.entity.UserStatus;
+import io.micrometer.common.util.StringUtils;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,5 +66,14 @@ public class User {
 
     private LocalDateTime now() {
         return LocalDateTime.now();
+    }
+
+    public void change(String username, String phoneNumber) {
+        if (!StringUtils.isEmpty(username)) {
+            this.username = username;
+        }
+        if (!StringUtils.isEmpty(phoneNumber)) {
+            this.phoneNumber = phoneNumber;
+        }
     }
 }

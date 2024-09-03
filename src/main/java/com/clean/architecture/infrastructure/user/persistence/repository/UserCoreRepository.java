@@ -1,8 +1,8 @@
 package com.clean.architecture.infrastructure.user.persistence.repository;
 
+import com.clean.architecture.domain.user.repository.UserRepository;
 import com.clean.architecture.infrastructure.user.persistence.dto.UserStatusUpdateRequest;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
-import com.clean.architecture.domain.user.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,8 +15,8 @@ public class UserCoreRepository implements UserRepository {
     private final JpaUserCustomRepository jpaUserCustomRepository;
 
     @Override
-    public UserEntity save(UserEntity userEntity) {
-        return jpaUserRepository.save(userEntity);
+    public UserEntity save(UserEntity user) {
+        return jpaUserRepository.save(user);
     }
 
     @Override
@@ -27,6 +27,11 @@ public class UserCoreRepository implements UserRepository {
 
         UserEntity foundUserEntity = jpaUserCustomRepository.findByEmail(email);
         return Optional.ofNullable(foundUserEntity);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return jpaUserRepository.existsByEmail(email);
     }
 
     @Override

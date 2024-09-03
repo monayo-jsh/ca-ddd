@@ -9,11 +9,17 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
+@SpringBootTest
 @DisplayName("유저 도메인 모델 <> 엔티티 매핑")
 class UserMapperTest {
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Test
     @DisplayName("to 엔티티")
@@ -26,7 +32,7 @@ class UserMapperTest {
                                    "01012345678");
 
         // When
-        UserEntity userEntity = UserMapper.INSTANCE.toEntity(user);
+        UserEntity userEntity = userMapper.toEntity(user);
 
         // Then
         assertThat(userEntity).isNotNull();
@@ -48,7 +54,7 @@ class UserMapperTest {
     void testToUser() {
 
         // Given
-        UserEntity userEntity = UserEntity.create(
+        UserEntity userEntity = new UserEntity(
             -1L,
             "user-mapping",
             "test",
@@ -59,7 +65,7 @@ class UserMapperTest {
         );
 
         // When
-        User user = UserMapper.INSTANCE.toDomain(userEntity);
+        User user = userMapper.toDomain(userEntity);
 
         // Then
         assertThat(user).isNotNull();

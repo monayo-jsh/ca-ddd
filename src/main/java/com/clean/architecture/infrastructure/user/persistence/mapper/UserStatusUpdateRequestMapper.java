@@ -14,6 +14,6 @@ public interface UserStatusUpdateRequestMapper {
     UserStatusUpdateRequestMapper INSTANCE = Mappers.getMapper(UserStatusUpdateRequestMapper.class);
 
     // Entity -> Update Request
-    UserStatusUpdateRequest toRequest(UserEntity userEntity);
+    UserStatusUpdateRequest toRequest(UserEntity user);
 
 }

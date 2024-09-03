@@ -9,4 +9,5 @@ public interface CartRepository {
     Optional<CartEntity> findByUserId(Long userId);
     void deleteById(Long id);
 
+    boolean existsByUserId(Long userId);
 }

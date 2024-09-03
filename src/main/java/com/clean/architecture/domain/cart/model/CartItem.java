@@ -28,6 +28,9 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public static CartItem createNew(Long productId, int quantity) {
+        return create(null, null, productId, quantity);
+    }
     public static CartItem create(Long id, Long productId, int quantity) {
         return create(id, null, productId, quantity);
     }

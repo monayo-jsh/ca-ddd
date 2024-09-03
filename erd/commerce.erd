@@ -4,8 +4,8 @@
   "settings": {
     "width": 5000,
     "height": 5000,
-    "scrollTop": -1077,
-    "scrollLeft": -58,
+    "scrollTop": -1323,
+    "scrollLeft": -546,
     "zoomLevel": 1,
     "show": 511,
     "database": 4,
@@ -3589,18 +3589,18 @@
         "tableId": "NdiQoYcnoU6wV9Bk6ItDh",
         "name": "status",
         "comment": "사용자 상태(ACTIVE, INACTIVE, DELETED, SUSPENDED, HUMAN)",
-        "dataType": "VARCHAR(20)",
+        "dataType": "ENUM",
         "default": "ACTIVE",
         "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 60,
           "widthComment": 360,
-          "widthDataType": 83,
+          "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1724801726006,
+          "updateAt": 1724905872288,
           "createAt": 1724801602387
         }
       },
@@ -3901,7 +3901,7 @@
       "UHWTCG3tysioNWCGjLUhp": {
         "id": "UHWTCG3tysioNWCGjLUhp",
         "identification": false,
-        "relationshipType": 2,
+        "relationshipType": 4,
         "startRelationshipType": 2,
         "start": {
           "tableId": "NdiQoYcnoU6wV9Bk6ItDh",
@@ -3922,7 +3922,7 @@
           "direction": 2
         },
         "meta": {
-          "updateAt": 1724656378016,
+          "updateAt": 1725266218651,
           "createAt": 1724656378016
         }
       },
@@ -5630,7 +5630,9 @@
       "relationshipEntities",
       1724656378015,
       -1,
-      {}
+      {
+        "relationshipType": 1725266218650
+      }
     ],
     "gmCVZ7WxZSIwI2GCeBHO_": [
       "tableColumnEntities",
@@ -6982,7 +6984,7 @@
       1724802441654,
       {
         "name": 1724801603815,
-        "dataType": 1724801605767,
+        "dataType": 1724905872286,
         "options(notNull)": 1724801606676,
         "default": 1724801609445,
         "comment": 1724801726005

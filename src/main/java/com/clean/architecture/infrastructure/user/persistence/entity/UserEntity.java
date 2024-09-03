@@ -11,12 +11,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
-@Getter
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(
     name = "tb_user",
@@ -57,38 +61,5 @@ public class UserEntity extends BaseEntity {
     @Comment("사용자 상태 변경일시")
     @Column(name = "status_changed_at", nullable = false)
     private LocalDateTime statusChangedAt;
-
-    protected UserEntity() {}
-
-    @Builder
-    private UserEntity(Long id, String username, String password, String email, String phoneNumber, UserStatus status, LocalDateTime statusChangedAt) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.status = status;
-        this.statusChangedAt = statusChangedAt;
-    }
-
-    public static UserEntity createTest(Long id) {
-        return UserEntity.builder().id(id).build();
-    }
-
-    public static UserEntity create(String username, String password, String email, String phoneNumber, UserStatus status, LocalDateTime statusChangedAt) {
-        return create(null, username, password, email, phoneNumber, status, statusChangedAt);
-    }
-
-    public static UserEntity create(Long id, String username, String password, String email, String phoneNumber, UserStatus status, LocalDateTime statusChangedAt) {
-        return UserEntity.builder()
-                         .id(id)
-                         .username(username)
-                         .password(password)
-                         .email(email)
-                         .phoneNumber(phoneNumber)
-                         .status(status)
-                         .statusChangedAt(statusChangedAt)
-                         .build();
-    }
 
 }

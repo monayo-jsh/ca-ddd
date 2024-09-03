@@ -1,6 +1,7 @@
 package com.clean.architecture.domain.cart.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,6 +44,10 @@ public class Cart {
 
     public static Cart createNew(Long userId, List<CartItem> cartItems) {
         return create(null, userId, null, cartItems);
+    }
+
+    public static Cart createNew(Long userId) {
+        return createNew(userId, Collections.emptyList());
     }
 
     // 비즈니스 로직 - 아이템 단건 삭제

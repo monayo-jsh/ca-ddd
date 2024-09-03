@@ -10,11 +10,17 @@ import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
+@SpringBootTest
 @DisplayName("카트 항목 도메인 모델 <> 엔티티 매핑")
 class CartItemMapperTest {
+
+    @Autowired
+    private CartItemMapper cartItemMapper;
 
     @Test
     @DisplayName("to 도메인 (연관 관계 없는 경우)")
@@ -24,7 +30,7 @@ class CartItemMapperTest {
         CartItemEntity cartItemEntity = new CartItemEntity(1L, 1L, 1);
 
         // Then
-        CartItem cartItem = CartItemMapper.INSTANCE.toDomain(cartItemEntity);
+        CartItem cartItem = cartItemMapper.toDomain(cartItemEntity);
 
         // When
         assertThat(cartItem).isNotNull();
@@ -45,7 +51,7 @@ class CartItemMapperTest {
         cartItemEntity.changeCart(cartEntity);
 
         // Then
-        CartItem cartItem = CartItemMapper.INSTANCE.toDomain(cartItemEntity);
+        CartItem cartItem = cartItemMapper.toDomain(cartItemEntity);
 
         // When
         assertThat(cartItem).isNotNull();
@@ -66,7 +72,7 @@ class CartItemMapperTest {
         CartItem cartItem = CartItem.create(100L, 1000L, 1);
 
         // Then
-        CartItemEntity cartItemEntity = CartItemMapper.INSTANCE.toEntity(cartItem);
+        CartItemEntity cartItemEntity = cartItemMapper.toEntity(cartItem);
 
         // When
         assertThat(cartItemEntity).isNotNull();
@@ -86,7 +92,7 @@ class CartItemMapperTest {
         CartItem cartItem = CartItem.create(100L, cart.getId(), 2L, 2);
 
         // Then
-        CartItemEntity cartItemEntity = CartItemMapper.INSTANCE.toEntity(cartItem);
+        CartItemEntity cartItemEntity = cartItemMapper.toEntity(cartItem);
 
         // When
         assertThat(cartItemEntity).isNotNull();

@@ -14,8 +14,8 @@ public class CartCoreRepository implements CartRepository {
     private final JpaCartCustomRepository jpaCartCustomRepository;
 
     @Override
-    public CartEntity save(CartEntity cartEntity) {
-        return jpaCartRepository.save(cartEntity);
+    public CartEntity save(CartEntity cart) {
+        return jpaCartRepository.save(cart);
     }
 
     @Override
@@ -24,12 +24,25 @@ public class CartCoreRepository implements CartRepository {
             throw new IllegalArgumentException("userId can not be null");
         }
 
-        CartEntity foundCartEntity = jpaCartCustomRepository.findByUserId(userId);
-        return Optional.ofNullable(foundCartEntity);
+        CartEntity cartEntity = jpaCartCustomRepository.findByUserId(userId);
+        return Optional.ofNullable(cartEntity);
     }
 
     @Override
     public void deleteById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("userId can not be null");
+        }
+
         jpaCartRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByUserId(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("userId can not be null");
+        }
+
+        return jpaCartRepository.existsByUserId(userId);
     }
 }
