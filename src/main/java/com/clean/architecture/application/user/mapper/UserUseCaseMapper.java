@@ -15,8 +15,6 @@ import org.mapstruct.factory.Mappers;
 )
 public interface UserUseCaseMapper {
 
-    UserUseCaseMapper INSTANCE = Mappers.getMapper(UserUseCaseMapper.class);
-
     // to Create Command
     CreateUserCommand toCreateCommand(UserRequest request);
 

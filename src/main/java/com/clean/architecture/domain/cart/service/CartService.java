@@ -1,5 +1,6 @@
 package com.clean.architecture.domain.cart.service;
 
+import com.clean.architecture.domain.cart.exception.CartAlreadyExistsException;
 import com.clean.architecture.domain.cart.model.Cart;
 import com.clean.architecture.domain.cart.repository.CartRepository;
 import com.clean.architecture.infrastructure.cart.mapper.CartMapper;
@@ -19,15 +20,16 @@ public class CartService {
                                               .orElseThrow(() -> new RuntimeException("사용자 장바구니 없음"));
         return cartMapper.toDomain(cartEntity);
     }
+
     public Cart createCart(Cart cart) {
         CartEntity cartEntity = cartMapper.toEntity(cart);
         CartEntity saveCartEntity = cartRepository.save(cartEntity);
         return cartMapper.toDomain(saveCartEntity);
     }
 
-    public void validateExists(Long userId) {
+    public void validateCartExists(Long userId) {
         if (cartRepository.existsByUserId(userId)) {
-            throw new IllegalArgumentException("사용자 장바구니 이미 존재");
+            throw new CartAlreadyExistsException(userId);
         }
     }
 }

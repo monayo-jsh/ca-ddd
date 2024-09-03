@@ -26,7 +26,7 @@ public class CartUseCase {
         User user = userService.getUserById(command.userId());
 
         // 2. 장바구니 검증
-        cartService.validateExists(user.getId());
+        cartService.validateCartExists(user.getId());
 
         // 3. 장바구니 생성
         Cart cart = Cart.createNew(user.getId());
@@ -35,5 +35,6 @@ public class CartUseCase {
         // 3. 응답
         return cartUseCaseMapper.toResponse(saveCart);
     }
+
 
 }
