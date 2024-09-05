@@ -7,7 +7,7 @@ import com.clean.architecture.config.QueryDSLConfig;
 import com.clean.architecture.infrastructure.user.persistence.dto.UserStatusUpdateRequest;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserStatus;
-import com.clean.architecture.infrastructure.user.persistence.mapper.UserStatusUpdateRequestMapper;
+import com.clean.architecture.infrastructure.user.persistence.mapper.UserUpdateRequestMapper;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 @Import({JpaAuditingConfig.class, QueryDSLConfig.class})
 @ComponentScan(
-    basePackages = "com.clean.architecture.infrastructure.user.persistence.repository"
+    basePackages = "com.clean.architecture.infrastructure.user.persistence"
 )
 @DisplayName("사용자 JPA 테스트")
 class UserCoreRepositoryTest {
@@ -34,13 +34,16 @@ class UserCoreRepositoryTest {
     @Autowired
     private UserCoreRepository userCoreRepository;
 
-    private UserEntity testUserEntity;
+    @Autowired
+    private UserUpdateRequestMapper userUpdateRequestMapper;
+
+    private UserEntity tempUserEntity;
 
     @BeforeEach
     public void init() {
         Long userSeq = new Random().nextLong();
 
-        testUserEntity = new UserEntity(null,
+        tempUserEntity = new UserEntity(null,
                                         "username-%s".formatted(userSeq),
                                         "encrypt-password",
                                         "email@google.com",
@@ -57,7 +60,7 @@ class UserCoreRepositoryTest {
         @DisplayName("저장 성공")
         void testSaveUser() {
             // Given, // When
-            UserEntity saveUser = userCoreRepository.save(testUserEntity);
+            UserEntity saveUser = userCoreRepository.save(tempUserEntity);
 
             // 영속성 초기화해서 조회할 수 있도록 설정
             entityManager.clear();
@@ -71,9 +74,17 @@ class UserCoreRepositoryTest {
             // Then
             assertThat(foundUserEntity).isNotNull();
 
-            assertThat(foundUserEntity.getId()).isNotNull();
+            // 저장된 컬럼 확인
+            assertThat(foundUserEntity.getUsername()).isEqualTo(saveUser.getUsername());
+            assertThat(foundUserEntity.getPassword()).isEqualTo(saveUser.getPassword());
+            assertThat(foundUserEntity.getEmail()).isEqualTo(saveUser.getEmail());
+            assertThat(foundUserEntity.getPhoneNumber()).isEqualTo(saveUser.getPhoneNumber());
+            assertThat(foundUserEntity.getStatus()).isEqualTo(saveUser.getStatus());
+            assertThat(foundUserEntity.getStatusChangedAt()).isEqualTo(saveUser.getStatusChangedAt());
 
-            assertThat(foundUserEntity.getStatusChangedAt()).isNotNull();
+            // 자동 주입 필드 확인
+            assertThat(foundUserEntity.getCreatedAt()).isNotNull();
+            assertThat(foundUserEntity.getUpdatedAt()).isNotNull();
         }
 
     }
@@ -86,20 +97,18 @@ class UserCoreRepositoryTest {
         @DisplayName("이메일 조회")
         void findByEmail() {
             // Given
-            userCoreRepository.save(testUserEntity);
+            userCoreRepository.save(tempUserEntity);
 
             // 영속성 초기화해서 조회할 수 있도록 설정
             entityManager.clear();
 
             // When
-            UserEntity foundUserEntity = userCoreRepository.findByEmail(testUserEntity.getEmail()).orElse(null);
+            UserEntity foundUserEntity = userCoreRepository.findByEmail(tempUserEntity.getEmail()).orElse(null);
 
             // Then
             assertThat(foundUserEntity).isNotNull();
 
-            assertThat(foundUserEntity.getEmail()).isEqualTo(testUserEntity.getEmail());
-            assertThat(foundUserEntity.getStatus()).isEqualTo(testUserEntity.getStatus());
-
+            assertThat(foundUserEntity.getEmail()).isEqualTo(tempUserEntity.getEmail());
         }
     }
 
@@ -112,26 +121,28 @@ class UserCoreRepositoryTest {
         void testUpdateUserStatus() {
 
             // Given
-            UserEntity saveUserEntity = userCoreRepository.save(testUserEntity);
+            UserEntity saveUserEntity = userCoreRepository.save(tempUserEntity);
 
             // 영속성 초기화해서 조회할 수 있도록 설정
             entityManager.clear();
 
             // Then
-            UserStatusUpdateRequest userStatusUpdateRequest = UserStatusUpdateRequestMapper.INSTANCE.toRequest(saveUserEntity);
+            // 실제 사용은 entity -> domain model -> model.changeStatus() -> to entity -> to Request
+            UserStatusUpdateRequest userStatusUpdateRequest = userUpdateRequestMapper.toStatusUpdateRequest(saveUserEntity);
             userStatusUpdateRequest.setStatus(UserStatus.INACTIVE);
             userStatusUpdateRequest.setStatusChangedAt(LocalDateTime.now());
             userCoreRepository.updateStatus(userStatusUpdateRequest);
 
+            // 영속성 초기화해서 조회할 수 있도록 설정
+            entityManager.clear();
+
             // When
-            UserEntity foundUserEntity = userCoreRepository.findByEmail(testUserEntity.getEmail()).orElse(null);
+            UserEntity foundUserEntity = userCoreRepository.findByEmail(tempUserEntity.getEmail()).orElse(null);
+
+            assertThat(foundUserEntity).isNotNull();
 
             // 테스트를 위해 신규 객체 확인
-            assertThat(foundUserEntity).isNotNull();
             assertThat(foundUserEntity).isNotEqualTo(saveUserEntity);
-
-            // 삭제되지 않음 확인
-            assertThat(foundUserEntity).isNotNull();
 
             // 상태, 변경일시 저장 확인
             assertThat(foundUserEntity.getStatus()).isEqualTo(userStatusUpdateRequest.getStatus());
