@@ -2,7 +2,7 @@ package com.clean.architecture.infrastructure.cart.persistence.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
-import com.clean.architecture.common.model.entity.BaseEntity;
+import com.clean.architecture.infrastructure.common.persistence.entity.BaseEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -40,7 +40,7 @@ public class CartEntity extends BaseEntity {
 
     @Comment("장바구니 고유키")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Comment("사용자 고유키(참조)")

@@ -1,6 +1,6 @@
 package com.clean.architecture.infrastructure.user.persistence.entity;
 
-import com.clean.architecture.common.model.entity.BaseEntity;
+import com.clean.architecture.infrastructure.common.persistence.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,7 +33,7 @@ public class UserEntity extends BaseEntity {
 
     @Comment("사용자 고유키")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Comment("사용자 이름")

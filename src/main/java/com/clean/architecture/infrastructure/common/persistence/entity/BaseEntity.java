@@ -1,4 +1,4 @@
-package com.clean.architecture.common.model.entity;
+package com.clean.architecture.infrastructure.common.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

@@ -28,12 +28,12 @@ public class CartItemEntity {
 
     @Comment("장바구니 항목 고유키")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Comment("장바구니 고유키(참조)")
     @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "cart_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT)) // 외래키 조건은 부여하지 않음
+    @JoinColumn(name = "cart_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT)) // 외래키 조건은 부여하지 않음
     private CartEntity cart;
 
     @Comment("상품 고유키(참조)")
