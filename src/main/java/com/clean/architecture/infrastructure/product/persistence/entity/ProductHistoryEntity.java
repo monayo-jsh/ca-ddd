@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "tb_product_history")
 @EntityListeners(AuditingEntityListener.class)
-public class ProductHistory {
+public class ProductHistoryEntity {
 
     @Comment("상품 이력 고유키")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +42,7 @@ public class ProductHistory {
     @Comment("상품 고유키(참조)")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Product product;
+    private ProductEntity product;
 
     @Comment("상품 이름")
     @Column(name = "name", nullable = false, length = 100)
@@ -56,12 +57,13 @@ public class ProductHistory {
     private BigDecimal price;
 
     @Comment("상품 카테고리 고유키(참조)")
-    @Column(name = "category_id", nullable = false)
-    private Long categoryId;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private CategoryEntity category;
 
     @Comment("상품 이미지 이력 목록")
     @OneToMany(fetch = LAZY, mappedBy = "productHistory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImageHistory> images;
+    private List<ProductImageHistoryEntity> images;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

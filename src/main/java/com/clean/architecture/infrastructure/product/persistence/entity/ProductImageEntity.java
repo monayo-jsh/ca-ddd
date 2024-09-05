@@ -2,10 +2,13 @@ package com.clean.architecture.infrastructure.product.persistence.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+import com.clean.architecture.infrastructure.common.persistence.entity.BaseEntity;
+import com.clean.architecture.infrastructure.common.persistence.entity.CommonStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,32 +16,28 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter @Setter
 @NoArgsConstructor
-@Comment("상품이미지 이력 테이블")
 @Entity
-@Table(name = "tb_product_image_history")
-@EntityListeners(AuditingEntityListener.class)
-public class ProductImageHistory {
+@Table(name = "tb_product_image")
+@Comment("상품이미지 테이블")
+public class ProductImageEntity extends BaseEntity {
 
-    @Comment("상품이미지 이력 고유키")
+    @Comment("상품이미지 고유키")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Comment("상품 이력 고유키")
+    @Comment("상품 고유키")
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "product_history_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    private ProductHistory productHistory;
+    @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private ProductEntity product;
 
     @Comment("이미지 URL")
     @Column(name = "image_url", nullable = false, length = 500)
@@ -53,9 +52,10 @@ public class ProductImageHistory {
     @ColumnDefault("1")
     private Integer sortOrder;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @Comment("생성일시")
-    private LocalDateTime createdAt;
+    @Comment("이미지 상태")
+    @Column(name = "status", nullable = false, length = 20)
+    @ColumnDefault("'ACTIVE'")
+    @Enumerated(EnumType.STRING)
+    private CommonStatus status;
 
 }
