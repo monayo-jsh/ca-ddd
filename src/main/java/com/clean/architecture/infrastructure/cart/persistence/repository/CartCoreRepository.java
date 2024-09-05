@@ -19,6 +19,15 @@ public class CartCoreRepository implements CartRepository {
     }
 
     @Override
+    public Optional<CartEntity> findById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id can not be null");
+        }
+
+        return jpaCartRepository.findById(id);
+    }
+
+    @Override
     public Optional<CartEntity> findByUserId(Long userId) {
         if (userId == null) {
             throw new IllegalArgumentException("userId can not be null");
@@ -45,4 +54,5 @@ public class CartCoreRepository implements CartRepository {
 
         return jpaCartRepository.existsByUserId(userId);
     }
+
 }

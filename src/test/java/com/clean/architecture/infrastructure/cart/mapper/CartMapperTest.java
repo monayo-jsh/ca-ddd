@@ -25,12 +25,12 @@ class CartMapperTest {
     @Autowired
     private CartMapper cartMapper;
 
-    private UserEntity testUserEntity;
+    private UserEntity tempUserEntity;
 
     @BeforeEach
     public void init() {
-        testUserEntity = new UserEntity();
-        testUserEntity.setId(-999L);
+        tempUserEntity = new UserEntity();
+        tempUserEntity.setId(-999L);
     }
 
 
@@ -94,7 +94,7 @@ class CartMapperTest {
     @DisplayName("to 도메인 모델 (하위 항목 없음)")
     void testToDomain() {
         // Given
-        CartEntity cartEntity = new CartEntity(1L, testUserEntity);
+        CartEntity cartEntity = new CartEntity(1L, tempUserEntity);
 
         // When
         Cart cart = cartMapper.toDomain(cartEntity);
@@ -109,14 +109,14 @@ class CartMapperTest {
         assertThat(cart.getUserId()).isNotNull();
         assertThat(cart.getUserId()).isEqualTo(cartEntity.getUser().getId());
 
-        assertThat(cart.getCartItems().size()).isEqualTo(cartEntity.getCartItems().size());
+        assertThat(cart.getCartItems().size()).isZero();
     }
 
     @Test
     @DisplayName("to 도메인 모델 (하위 항목 있음)")
     void testToDomainWithChild() {
         // Given
-        CartEntity cartEntity = new CartEntity(1L, testUserEntity);
+        CartEntity cartEntity = new CartEntity(1L, tempUserEntity);
         List<CartItemEntity> cartItemEntities = List.of(
             new CartItemEntity(100L, 1L, 1),
             new CartItemEntity(200L, 2L, 2),

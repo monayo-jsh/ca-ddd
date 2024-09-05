@@ -45,7 +45,7 @@ public class CartEntity extends BaseEntity {
 
     @Comment("사용자 고유키(참조)")
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private UserEntity user;
 
     @Comment("장바구니 이름")

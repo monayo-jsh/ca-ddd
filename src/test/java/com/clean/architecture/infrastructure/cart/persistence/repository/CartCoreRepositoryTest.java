@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 @Import({JpaAuditingConfig.class, QueryDSLConfig.class})
 @ComponentScan(basePackages = {
-    "com.clean.architecture.infrastructure.cart.persistence.repository"
+    "com.clean.architecture.infrastructure.cart.persistence"
 })
 @DisplayName("장바구니 JPA 테스트")
 class CartCoreRepositoryTest {
@@ -43,7 +43,7 @@ class CartCoreRepositoryTest {
     @Autowired
     private EntityManager entityManager;
 
-    private UserEntity testUserEntity;
+    private UserEntity tempUserEntity;
 
     @BeforeEach
     public void init() {
@@ -56,12 +56,12 @@ class CartCoreRepositoryTest {
                                                UserStatus.ACTIVE,
                                                LocalDateTime.now());
 
-        testUserEntity = jpaUserRepository.save(userEntity);
+        tempUserEntity = jpaUserRepository.save(userEntity);
     }
 
     @AfterEach
     public void clean() {
-        jpaUserRepository.deleteById(testUserEntity.getId());
+        jpaUserRepository.deleteById(tempUserEntity.getId());
     }
 
     @Nested
@@ -72,7 +72,7 @@ class CartCoreRepositoryTest {
         @DisplayName("하위 항목 없음")
         void testSaveCart() {
             // Given
-            CartEntity cartEntity = new CartEntity(testUserEntity);
+            CartEntity cartEntity = new CartEntity(tempUserEntity);
 
             // When
             CartEntity saveCartEntity = cartCoreRepository.save(cartEntity);
@@ -80,15 +80,15 @@ class CartCoreRepositoryTest {
             // 영속성 컨테이너 초기화
             entityManager.clear();
 
+            CartEntity foundCartEntity = cartCoreRepository.findById(saveCartEntity.getId()).orElse(null);
+
             // That
-            assertThat(saveCartEntity).isNotNull();
+            assertThat(foundCartEntity).isNotNull();
 
-            assertThat(saveCartEntity.getId()).isNotNull();
+            assertThat(foundCartEntity.getUser()).isNotNull();
+            assertThat(foundCartEntity.getUser().getId()).isEqualTo(tempUserEntity.getId());
 
-            assertThat(saveCartEntity.getUser()).isNotNull();
-            assertThat(saveCartEntity.getUser().getId()).isEqualTo(testUserEntity.getId());
-
-            assertThat(saveCartEntity.getCartItems()).isEmpty();
+            assertThat(foundCartEntity.getCartItems()).isEmpty();
         }
 
         @Test
@@ -100,7 +100,7 @@ class CartCoreRepositoryTest {
                 new CartItemEntity(200L, 1),
                 new CartItemEntity(300L, 1)
             );
-            CartEntity cartEntity = new CartEntity(testUserEntity);
+            CartEntity cartEntity = new CartEntity(tempUserEntity);
             cartEntity.changeCartItems(cartItemEntities);
 
             // When
@@ -109,16 +109,15 @@ class CartCoreRepositoryTest {
             // 영속성 컨테이너 초기화
             entityManager.clear();
 
-            CartEntity foundCart = cartCoreRepository.findByUserId(testUserEntity.getId()).orElse(null);
+            CartEntity foundCartEntity = cartCoreRepository.findByUserId(tempUserEntity.getId()).orElse(null);
 
-            assertThat(foundCart).isNotNull();
-            assertThat(foundCart.getId()).isNotNull();
+            assertThat(foundCartEntity).isNotNull();
 
-            assertThat(foundCart.getUser()).isNotNull();
-            assertThat(foundCart.getUser().getId()).isEqualTo(cartEntity.getUser().getId());
+            assertThat(foundCartEntity.getUser()).isNotNull();
+            assertThat(foundCartEntity.getUser().getId()).isEqualTo(cartEntity.getUser().getId());
 
-            assertThat(foundCart.getCartItems().size()).isEqualTo(cartItemEntities.size());
-            foundCart.getCartItems().forEach(cartItem -> {
+            assertThat(foundCartEntity.getCartItems().size()).isEqualTo(cartItemEntities.size());
+            foundCartEntity.getCartItems().forEach(cartItem -> {
                 assertThat(cartItem.getId()).isNotNull();
                 assertThat(cartItem.getCart().getId()).isEqualTo(saveCartEntity.getId());
             });
@@ -131,12 +130,32 @@ class CartCoreRepositoryTest {
     class FindTests {
 
         @Test
+        @DisplayName("장바구니 고유키 null 전달")
+        void testBadRequestFindById() {
+            // Given
+
+            // When, Then
+            assertThatThrownBy(() -> cartCoreRepository.findById(null))
+                .isInstanceOf(IllegalArgumentException.class);
+        }
+
+        @Test
         @DisplayName("사용자 아이디 null 전달")
         void testBadRequestFindByUserId() {
             // Given
 
             // When, Then
             assertThatThrownBy(() -> cartCoreRepository.findByUserId(null))
+                .isInstanceOf(IllegalArgumentException.class);
+        }
+
+        @Test
+        @DisplayName("장바구니 존재 확인 null 전달")
+        void testBadRequestExistsById() {
+            // Given
+
+            // When, Then
+            assertThatThrownBy(() -> cartCoreRepository.existsByUserId(null))
                 .isInstanceOf(IllegalArgumentException.class);
         }
 
@@ -157,14 +176,14 @@ class CartCoreRepositoryTest {
         void testFindByUserId() {
 
             // Given
-            CartEntity cartEntity = new CartEntity(testUserEntity);
+            CartEntity cartEntity = new CartEntity(tempUserEntity);
             cartCoreRepository.save(cartEntity);
 
             // 영속성 컨테이너 초기화
             entityManager.clear();
 
             // When
-            Optional<CartEntity> findCartEntity = cartCoreRepository.findByUserId(testUserEntity.getId());
+            Optional<CartEntity> findCartEntity = cartCoreRepository.findByUserId(tempUserEntity.getId());
 
             assertThat(findCartEntity).isPresent();
 
@@ -181,7 +200,7 @@ class CartCoreRepositoryTest {
         void testDeleteById() {
 
             // Given
-            CartEntity cartEntity = new CartEntity(testUserEntity);
+            CartEntity cartEntity = new CartEntity(tempUserEntity);
             CartEntity saveCartEntity = cartCoreRepository.save(cartEntity);
 
             // 영속성 컨테이너 초기화
@@ -190,7 +209,7 @@ class CartCoreRepositoryTest {
             // When
             cartCoreRepository.deleteById(saveCartEntity.getId());
 
-            Optional<CartEntity> findCart = cartCoreRepository.findByUserId(testUserEntity.getId());
+            Optional<CartEntity> findCart = cartCoreRepository.findByUserId(tempUserEntity.getId());
 
             assertThat(findCart).isEmpty();
 
@@ -206,7 +225,7 @@ class CartCoreRepositoryTest {
                 new CartItemEntity(200L, 1),
                 new CartItemEntity(300L, 1)
             );
-            CartEntity cartEntity = new CartEntity(testUserEntity);
+            CartEntity cartEntity = new CartEntity(tempUserEntity);
             cartEntity.changeCartItems(cartItemEntities);
 
             CartEntity saveCartEntity = cartCoreRepository.save(cartEntity);
@@ -217,7 +236,8 @@ class CartCoreRepositoryTest {
             // When
             cartCoreRepository.deleteById(saveCartEntity.getId());
 
-            Optional<CartEntity> findCart = cartCoreRepository.findByUserId(testUserEntity.getId());
+            // Then
+            Optional<CartEntity> findCart = cartCoreRepository.findByUserId(tempUserEntity.getId());
 
             assertThat(findCart).isEmpty();
 
