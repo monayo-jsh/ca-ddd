@@ -11,7 +11,10 @@ public interface JpaCategoryRepository extends JpaRepository<CategoryEntity, Lon
 
     // 상위 카테고리, 상위 카테고리의 부모까지 즉시 로딩
     // 결국 left outer join 이 실행되는 구조이기 때문에 특정 조건을 부여할 수는 없다.
-    // 가져온 뒤 애플리케이션 계층에서 처리가 필요함.
+    // 조건 처리가 필요하다면 가져온 뒤 애플리케이션 계층에서 조건 처리 처리가 필요함.
+    // products = products.stream()
+    //                    .filter(p -> p.getCategory().getStatus() == Status.ACTIVE)
+    //                    .collect(Collectors.toList());
     @EntityGraph(attributePaths = { "parent", "parent.parent" })
     Optional<CategoryEntity> findById(Long id);
 
