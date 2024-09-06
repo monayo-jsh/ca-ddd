@@ -2,6 +2,7 @@ package com.clean.architecture.infrastructure.order.persistence.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+import com.clean.architecture.infrastructure.shipment.persistence.entity.ShipmentEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -61,10 +62,6 @@ public class OrderEntity {
     @Comment("주문 총 가격")
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
-
-    //배송 정보
-    @OneToOne(fetch = LAZY, mappedBy = "order")
-    private ShipmentEntity shipment;
 
     @Comment("수정일시")
     @Column(name = "updated_at", nullable = false)

@@ -1,4 +1,4 @@
-package com.clean.architecture.infrastructure.order.persistence.entity;
+package com.clean.architecture.infrastructure.shipment.persistence.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 

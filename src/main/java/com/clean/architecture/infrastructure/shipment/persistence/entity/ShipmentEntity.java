@@ -1,8 +1,9 @@
-package com.clean.architecture.infrastructure.order.persistence.entity;
+package com.clean.architecture.infrastructure.shipment.persistence.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 import com.clean.architecture.infrastructure.common.persistence.entity.BaseEntity;
+import com.clean.architecture.infrastructure.order.persistence.entity.OrderEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
