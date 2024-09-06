@@ -47,7 +47,7 @@ public class CategoryEntity extends BaseEntity {
     @Comment("상위 카테고리 참조(자기참조)")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_category_id", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private CategoryEntity parentCategory;
+    private CategoryEntity parent;
 
     @Comment("카테고리 상태")
     @Column(name = "status", nullable = false, length = 20)
