@@ -8,6 +8,7 @@ import com.clean.architecture.infrastructure.common.persistence.entity.CommonSta
 import com.clean.architecture.infrastructure.product.persistence.entity.CategoryEntity;
 import com.clean.architecture.infrastructure.product.persistence.entity.ProductEntity;
 import com.clean.architecture.infrastructure.product.persistence.entity.ProductImageEntity;
+import com.clean.architecture.infrastructure.product.persistence.repository.JpaCategoryRepository;
 import com.clean.architecture.infrastructure.product.persistence.repository.JpaProductRepository;
 import com.clean.architecture.infrastructure.product.persistence.repository.ProductCoreRepository;
 import jakarta.persistence.EntityManager;
