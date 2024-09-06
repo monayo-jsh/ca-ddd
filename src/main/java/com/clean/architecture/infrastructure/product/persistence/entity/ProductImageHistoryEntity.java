@@ -22,8 +22,7 @@ import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Getter
-@NoArgsConstructor
+@Getter @NoArgsConstructor
 @Comment("상품이미지 이력 테이블")
 @Entity
 @Table(name = "tb_product_image_history")

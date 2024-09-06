@@ -22,8 +22,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
-@Getter
-@NoArgsConstructor
+@Getter @NoArgsConstructor
 @Entity
 @Table(name = "tb_product_image")
 @Comment("상품이미지 테이블")

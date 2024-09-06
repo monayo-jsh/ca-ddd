@@ -16,15 +16,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Getter @Setter
-@NoArgsConstructor
+@Getter @NoArgsConstructor
 @Entity
 @Table(name = "tb_shipment_status")
 @EntityListeners(AuditingEntityListener.class)
@@ -50,4 +49,12 @@ public class ShipmentStatusEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @Builder
+    private ShipmentStatusEntity(Long id, ShipmentEntity shipment, ShipmentStatus status, LocalDateTime createdAt) {
+        this.id = id;
+        this.shipment = shipment;
+        this.status = status;
+        this.createdAt = createdAt;
+    }
 }

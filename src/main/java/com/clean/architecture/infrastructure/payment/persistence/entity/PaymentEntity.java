@@ -14,8 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-@Getter
-@NoArgsConstructor
+@Getter @NoArgsConstructor
 @Entity
 @Table(name = "tb_payment")
 @Comment("결제 테이블")

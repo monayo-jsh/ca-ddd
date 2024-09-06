@@ -27,8 +27,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Getter
-@NoArgsConstructor
+@Getter @NoArgsConstructor
 @Entity
 @Table(name = "tb_order")
 @Comment("주문 테이블")
