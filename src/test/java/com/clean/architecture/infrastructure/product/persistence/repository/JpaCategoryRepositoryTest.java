@@ -34,13 +34,13 @@ class JpaCategoryRepositoryTest {
     void findEntityGraph() {
 
         // given
-        CategoryEntity categoryEntity1 = makeTempCategory("한국", null);
+        CategoryEntity categoryEntity1 = makeTempCategory("한국", null, CommonStatus.ACTIVE);
         jpaCategoryRepository.save(categoryEntity1);
 
-        CategoryEntity categoryEntity2 = makeTempCategory("음식", categoryEntity1);
+        CategoryEntity categoryEntity2 = makeTempCategory("음식", categoryEntity1, CommonStatus.ACTIVE);
         jpaCategoryRepository.save(categoryEntity2);
 
-        CategoryEntity categoryEntity3 = makeTempCategory("치킨", categoryEntity2);
+        CategoryEntity categoryEntity3 = makeTempCategory("치킨", categoryEntity2, CommonStatus.ACTIVE);
         jpaCategoryRepository.save(categoryEntity3);
 
         entityManager.clear();
@@ -66,14 +66,13 @@ class JpaCategoryRepositoryTest {
     void findWithRecursive() {
 
         // given
-        CategoryEntity categoryEntity1 = makeTempCategory("한국", null);
+        CategoryEntity categoryEntity1 = makeTempCategory("한국", null, CommonStatus.ACTIVE);
         jpaCategoryRepository.save(categoryEntity1);
 
-        CategoryEntity categoryEntity2 = makeTempCategory("음식", categoryEntity1);
-        categoryEntity2.setStatus(CommonStatus.INACTIVE);
+        CategoryEntity categoryEntity2 = makeTempCategory("음식", categoryEntity1, CommonStatus.INACTIVE);
         jpaCategoryRepository.save(categoryEntity2);
 
-        CategoryEntity categoryEntity3 = makeTempCategory("치킨", categoryEntity2);
+        CategoryEntity categoryEntity3 = makeTempCategory("치킨", categoryEntity2, CommonStatus.ACTIVE);
         jpaCategoryRepository.save(categoryEntity3);
 
         entityManager.clear();
@@ -91,11 +90,11 @@ class JpaCategoryRepositoryTest {
         // 쿼리 1번만 수행되었는지 확인
     }
 
-    private CategoryEntity makeTempCategory(String name, CategoryEntity parentCategory) {
-        CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setName(name);
-        categoryEntity.setStatus(CommonStatus.ACTIVE);
-        categoryEntity.setParent(parentCategory);
-        return categoryEntity;
+    private CategoryEntity makeTempCategory(String name, CategoryEntity parentCategory, CommonStatus status) {
+        return CategoryEntity.builder()
+                             .name(name)
+                             .status(status)
+                             .parent(parentCategory)
+                             .build();
     }
 }

@@ -29,8 +29,7 @@ class CartMapperTest {
 
     @BeforeEach
     public void init() {
-        tempUserEntity = new UserEntity();
-        tempUserEntity.setId(-999L);
+        tempUserEntity = UserEntity.builder().id(-999L).build();
     }
 
 
@@ -94,7 +93,7 @@ class CartMapperTest {
     @DisplayName("to 도메인 모델 (하위 항목 없음)")
     void testToDomain() {
         // Given
-        CartEntity cartEntity = new CartEntity(1L, tempUserEntity);
+        CartEntity cartEntity = CartEntity.builder().id(1L).user(tempUserEntity).build();
 
         // When
         Cart cart = cartMapper.toDomain(cartEntity);
@@ -116,11 +115,11 @@ class CartMapperTest {
     @DisplayName("to 도메인 모델 (하위 항목 있음)")
     void testToDomainWithChild() {
         // Given
-        CartEntity cartEntity = new CartEntity(1L, tempUserEntity);
+        CartEntity cartEntity = CartEntity.builder().id(1L).user(tempUserEntity).build();
         List<CartItemEntity> cartItemEntities = List.of(
-            new CartItemEntity(100L, 1L, 1),
-            new CartItemEntity(200L, 2L, 2),
-            new CartItemEntity(300L, 3L, 3)
+            CartItemEntity.builder().id(100L).productId(1L).quantity(1).build(),
+            CartItemEntity.builder().id(200L).productId(2L).quantity(2).build(),
+            CartItemEntity.builder().id(300L).productId(3L).quantity(3).build()
         );
         cartEntity.changeCartItems(cartItemEntities);
 

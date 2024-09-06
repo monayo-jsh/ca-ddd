@@ -72,7 +72,7 @@ class CartCoreRepositoryTest {
         @DisplayName("하위 항목 없음")
         void testSaveCart() {
             // Given
-            CartEntity cartEntity = new CartEntity(tempUserEntity);
+            CartEntity cartEntity = CartEntity.builder().user(tempUserEntity).build();
 
             // When
             CartEntity saveCartEntity = cartCoreRepository.save(cartEntity);
@@ -96,11 +96,11 @@ class CartCoreRepositoryTest {
         void testSaveCartWithItems() {
             // Given
             List<CartItemEntity> cartItemEntities = List.of(
-                new CartItemEntity(100L, 1),
-                new CartItemEntity(200L, 1),
-                new CartItemEntity(300L, 1)
+                CartItemEntity.builder().productId(100L).quantity(1).build(),
+                CartItemEntity.builder().productId(200L).quantity(2).build(),
+                CartItemEntity.builder().productId(300L).quantity(3).build()
             );
-            CartEntity cartEntity = new CartEntity(tempUserEntity);
+            CartEntity cartEntity = CartEntity.builder().user(tempUserEntity).build();
             cartEntity.changeCartItems(cartItemEntities);
 
             // When
@@ -176,7 +176,7 @@ class CartCoreRepositoryTest {
         void testFindByUserId() {
 
             // Given
-            CartEntity cartEntity = new CartEntity(tempUserEntity);
+            CartEntity cartEntity = CartEntity.builder().user(tempUserEntity).build();
             cartCoreRepository.save(cartEntity);
 
             // 영속성 컨테이너 초기화
@@ -200,7 +200,7 @@ class CartCoreRepositoryTest {
         void testDeleteById() {
 
             // Given
-            CartEntity cartEntity = new CartEntity(tempUserEntity);
+            CartEntity cartEntity = CartEntity.builder().user(tempUserEntity).build();
             CartEntity saveCartEntity = cartCoreRepository.save(cartEntity);
 
             // 영속성 컨테이너 초기화
@@ -221,11 +221,11 @@ class CartCoreRepositoryTest {
 
             // Given
             List<CartItemEntity> cartItemEntities = List.of(
-                new CartItemEntity(100L, 1),
-                new CartItemEntity(200L, 1),
-                new CartItemEntity(300L, 1)
+                CartItemEntity.builder().productId(100L).quantity(1).build(),
+                CartItemEntity.builder().productId(200L).quantity(2).build(),
+                CartItemEntity.builder().productId(300L).quantity(3).build()
             );
-            CartEntity cartEntity = new CartEntity(tempUserEntity);
+            CartEntity cartEntity = CartEntity.builder().user(tempUserEntity).build();
             cartEntity.changeCartItems(cartItemEntities);
 
             CartEntity saveCartEntity = cartCoreRepository.save(cartEntity);

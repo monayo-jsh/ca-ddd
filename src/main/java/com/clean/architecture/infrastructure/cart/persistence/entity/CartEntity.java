@@ -20,14 +20,16 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
-@Getter @Setter
+@Getter @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(
     name = "tb_cart",
@@ -55,6 +57,7 @@ public class CartEntity extends BaseEntity {
 
     @Comment("장바구니 항목 목록")
     @OneToMany(fetch = LAZY, mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<CartItemEntity> cartItems = new ArrayList<>();
 
     @PrePersist
@@ -62,25 +65,6 @@ public class CartEntity extends BaseEntity {
         if (this.name == null) {
             this.name = "기본";
         }
-    }
-
-    public CartEntity(UserEntity user) {
-        this.user = user;
-    }
-
-    public CartEntity(Long id, UserEntity user) {
-        this(user);
-        this.id = id;
-    }
-
-    public CartEntity(UserEntity userEntity, List<CartItemEntity> cartItems) {
-        this(userEntity);
-        changeCartItems(cartItems);
-    }
-
-    public CartEntity(Long id, UserEntity userEntity, List<CartItemEntity> cartItems) {
-        this(userEntity, cartItems);
-        this.id = id;
     }
 
     public void changeCartItem(CartItemEntity cartItem) {

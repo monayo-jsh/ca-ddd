@@ -77,31 +77,31 @@ class ProductRepositoryTest {
     }
 
     private CategoryEntity makeTempCategory(String name, CategoryEntity parentCategory) {
-        CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setName(name);
-        categoryEntity.setStatus(CommonStatus.ACTIVE);
-        categoryEntity.setParent(parentCategory);
-        return categoryEntity;
+        return CategoryEntity.builder()
+                             .name(name)
+                             .status(CommonStatus.ACTIVE)
+                             .parent(parentCategory)
+                             .build();
     }
 
     private ProductEntity makeTempProduct(Long seq, CategoryEntity categoryEntity) {
-        ProductEntity productEntity = new ProductEntity();
-            productEntity.setName("product-%s".formatted(seq));
-            productEntity.setDescription("description-%s".formatted(seq));
-            productEntity.setPrice(BigDecimal.valueOf(100));
-            productEntity.setStockQuantity(10);
-                productEntity.setCategory(categoryEntity);
-        return productEntity;
+        return ProductEntity.builder()
+                            .name("product-%s".formatted(seq))
+                            .description("description-%s".formatted(seq))
+                            .price(BigDecimal.valueOf(100))
+                            .stockQuantity(10)
+                            .category(categoryEntity)
+                            .build();
     }
 
     private ProductImageEntity makeTempProductImage(ProductEntity productEntity, Integer seq) {
-        ProductImageEntity productImageEntity = new ProductImageEntity();
-        productImageEntity.setProduct(productEntity);
-        productImageEntity.setImageUrl("image-url-%s".formatted(seq));
-        productImageEntity.setAltText("image-alt-text-%s".formatted(seq));
-        productImageEntity.setSortOrder(seq);
-        productImageEntity.setStatus(seq % 2 == 0 ? CommonStatus.ACTIVE : CommonStatus.INACTIVE);
-        return productImageEntity;
+        return ProductImageEntity.builder()
+                                 .product(productEntity)
+                                 .imageUrl("image-url-%s".formatted(seq))
+                                 .altText("image-alt-text-%s".formatted(seq))
+                                 .sortOrder(seq)
+                                 .status(seq % 2 == 0 ? CommonStatus.ACTIVE : CommonStatus.INACTIVE)
+                                 .build();
     }
 
     @Test

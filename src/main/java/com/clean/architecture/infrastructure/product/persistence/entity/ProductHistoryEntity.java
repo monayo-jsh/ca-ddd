@@ -19,15 +19,17 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Getter @Setter
+@Getter @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Comment("상품 이력 테이블")
 @Entity
 @Table(name = "tb_product_history")

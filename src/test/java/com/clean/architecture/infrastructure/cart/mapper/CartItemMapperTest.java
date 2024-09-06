@@ -27,7 +27,7 @@ class CartItemMapperTest {
     void testToDomain() {
 
         // Given
-        CartItemEntity cartItemEntity = new CartItemEntity(1L, 1L, 1);
+        CartItemEntity cartItemEntity = CartItemEntity.builder().id(100L).productId(1L).quantity(1).build();
 
         // Then
         CartItem cartItem = cartItemMapper.toDomain(cartItemEntity);
@@ -46,8 +46,8 @@ class CartItemMapperTest {
     void testToDomainWithCart() {
 
         // Given
-        CartEntity cartEntity = new CartEntity(1L, null);
-        CartItemEntity cartItemEntity = new CartItemEntity(100L, 1L, 1);
+        CartEntity cartEntity = CartEntity.builder().id(1L).build();
+        CartItemEntity cartItemEntity = CartItemEntity.builder().id(100L).productId(1L).quantity(1).build();
         cartItemEntity.changeCart(cartEntity);
 
         // Then
