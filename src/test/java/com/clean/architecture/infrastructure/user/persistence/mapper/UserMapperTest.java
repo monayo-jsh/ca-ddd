@@ -24,7 +24,6 @@ class UserMapperTest {
     @Test
     @DisplayName("to 엔티티")
     void testToUserEntity() {
-
         // Given
         User user = User.createNew("user-mapping",
                                    "test",
@@ -52,17 +51,16 @@ class UserMapperTest {
     @Test
     @DisplayName("to 도메인 모델")
     void testToUser() {
-
         // Given
-        UserEntity userEntity = new UserEntity(
-            -1L,
-            "user-mapping",
-            "test",
-            "test@gmail.com",
-            "01012345678",
-            UserStatus.DELETED,
-            LocalDateTime.now()
-        );
+        UserEntity userEntity = UserEntity.builder()
+                                          .id(-1L)
+                                          .username("user-mapping")
+                                          .password("test")
+                                          .email("test@gmail.com")
+                                          .phoneNumber("01012345678")
+                                          .status(UserStatus.DELETED)
+                                          .statusChangedAt(LocalDateTime.now())
+                                          .build();
 
         // When
         User user = userMapper.toDomain(userEntity);

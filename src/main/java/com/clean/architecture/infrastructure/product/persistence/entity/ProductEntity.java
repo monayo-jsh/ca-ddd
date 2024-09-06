@@ -17,16 +17,13 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(
     name = "tb_product",
@@ -67,4 +64,14 @@ public class ProductEntity extends BaseEntity {
     @OneToMany(fetch = LAZY, mappedBy = "product")
     private List<ProductImageEntity> images;
 
+    @Builder
+    private ProductEntity(Long id, String name, String description, BigDecimal price, Integer stockQuantity, CategoryEntity category, List<ProductImageEntity> images) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.category = category;
+        this.images = images;
+    }
 }

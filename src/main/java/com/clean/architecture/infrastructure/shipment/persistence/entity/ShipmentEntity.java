@@ -7,15 +7,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
-@Setter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "tb_shipment")
 @Comment("배송 테이블")
@@ -42,4 +40,12 @@ public class ShipmentEntity extends BaseEntity {
     @Column(name = "shipping_address", nullable = false, length = 255)
     private String shippingAddress;
 
+    @Builder
+    private ShipmentEntity(Long id, Long orderId, String carrier, String trackingNumber, String shippingAddress) {
+        this.id = id;
+        this.orderId = orderId;
+        this.carrier = carrier;
+        this.trackingNumber = trackingNumber;
+        this.shippingAddress = shippingAddress;
+    }
 }

@@ -17,16 +17,14 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(
     name = "tb_category",
@@ -57,4 +55,11 @@ public class CategoryEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CommonStatus status;
 
+    @Builder
+    private CategoryEntity(Long id, String name, CategoryEntity parent, CommonStatus status) {
+        this.id = id;
+        this.name = name;
+        this.parent = parent;
+        this.status = status;
+    }
 }

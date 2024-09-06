@@ -43,13 +43,14 @@ class UserCoreRepositoryTest {
     public void init() {
         Long userSeq = new Random().nextLong();
 
-        tempUserEntity = new UserEntity(null,
-                                        "username-%s".formatted(userSeq),
-                                        "encrypt-password",
-                                        "email@google.com",
-                                        "01012345678",
-                                        UserStatus.ACTIVE,
-                                        LocalDateTime.now());
+        tempUserEntity = UserEntity.builder()
+                                   .username("username-%s".formatted(userSeq))
+                                   .password("encrypt-password")
+                                   .email("email@google.com")
+                                   .phoneNumber("01012345678")
+                                   .status(UserStatus.ACTIVE)
+                                   .statusChangedAt(LocalDateTime.now())
+                                   .build();
     }
 
     @Nested

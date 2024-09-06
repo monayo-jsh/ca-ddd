@@ -16,15 +16,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "tb_payment_part")
 @Comment("결제 분할 테이블")
@@ -52,4 +50,13 @@ public class PaymentPartEntity {
     @Comment("분할 결제 일시")
     @Column(name = "paid_at", nullable = false)
     private LocalDateTime paidAt;
+
+    @Builder
+    private PaymentPartEntity(Long id, PaymentEntity payment, PaymentMethod method, BigDecimal amount, LocalDateTime paidAt) {
+        this.id = id;
+        this.payment = payment;
+        this.method = method;
+        this.amount = amount;
+        this.paidAt = paidAt;
+    }
 }

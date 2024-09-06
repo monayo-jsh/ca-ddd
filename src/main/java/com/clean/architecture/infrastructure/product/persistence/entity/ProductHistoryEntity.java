@@ -19,7 +19,6 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +26,8 @@ import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Comment("상품 이력 테이블")
 @Entity
 @Table(name = "tb_product_history")
@@ -72,4 +70,15 @@ public class ProductHistoryEntity {
     @Comment("생성일시")
     private LocalDateTime createdAt;
 
+    @Builder
+    private ProductHistoryEntity(Long id, ProductEntity product, String name, String description, BigDecimal price, CategoryEntity category, List<ProductImageHistoryEntity> images, LocalDateTime createdAt) {
+        this.id = id;
+        this.product = product;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+        this.images = images;
+        this.createdAt = createdAt;
+    }
 }

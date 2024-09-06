@@ -14,7 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,9 +22,8 @@ import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Comment("상품이미지 이력 테이블")
 @Entity
 @Table(name = "tb_product_image_history")
@@ -60,4 +58,13 @@ public class ProductImageHistoryEntity {
     @Comment("생성일시")
     private LocalDateTime createdAt;
 
+    @Builder
+    private ProductImageHistoryEntity(Long id, ProductHistoryEntity productHistory, String imageUrl, String altText, Integer sortOrder, LocalDateTime createdAt) {
+        this.id = id;
+        this.productHistory = productHistory;
+        this.imageUrl = imageUrl;
+        this.altText = altText;
+        this.sortOrder = sortOrder;
+        this.createdAt = createdAt;
+    }
 }

@@ -9,15 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "tb_payment")
 @Comment("결제 테이블")
@@ -41,4 +39,11 @@ public class PaymentEntity {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
+    @Builder
+    private PaymentEntity(Long id, Long orderId, BigDecimal totalAmount, PaymentStatus status) {
+        this.id = id;
+        this.orderId = orderId;
+        this.totalAmount = totalAmount;
+        this.status = status;
+    }
 }

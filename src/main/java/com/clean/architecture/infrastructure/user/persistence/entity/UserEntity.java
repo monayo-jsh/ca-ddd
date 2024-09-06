@@ -11,16 +11,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(
     name = "tb_user",
@@ -62,4 +60,14 @@ public class UserEntity extends BaseEntity {
     @Column(name = "status_changed_at", nullable = false)
     private LocalDateTime statusChangedAt;
 
+    @Builder
+    private UserEntity(Long id, String username, String password, String email, String phoneNumber, UserStatus status, LocalDateTime statusChangedAt) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
+        this.statusChangedAt = statusChangedAt;
+    }
 }

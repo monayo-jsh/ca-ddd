@@ -18,7 +18,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +27,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "tb_order")
 @Comment("주문 테이블")
@@ -68,4 +66,13 @@ public class OrderEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @Builder
+    private OrderEntity(Long id, UserEntity user, LocalDateTime orderedAt, OrderStatus status, BigDecimal totalAmount, LocalDateTime updatedAt) {
+        this.id = id;
+        this.user = user;
+        this.orderedAt = orderedAt;
+        this.status = status;
+        this.totalAmount = totalAmount;
+        this.updatedAt = updatedAt;
+    }
 }

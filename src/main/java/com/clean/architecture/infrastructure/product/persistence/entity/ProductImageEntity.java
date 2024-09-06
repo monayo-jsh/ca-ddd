@@ -16,16 +16,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "tb_product_image")
 @Comment("상품이미지 테이블")
@@ -60,4 +58,13 @@ public class ProductImageEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CommonStatus status;
 
+    @Builder
+    private ProductImageEntity(Long id, ProductEntity product, String imageUrl, String altText, Integer sortOrder, CommonStatus status) {
+        this.id = id;
+        this.product = product;
+        this.imageUrl = imageUrl;
+        this.altText = altText;
+        this.sortOrder = sortOrder;
+        this.status = status;
+    }
 }

@@ -20,16 +20,14 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
-@Getter @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(
     name = "tb_cart",
@@ -57,7 +55,6 @@ public class CartEntity extends BaseEntity {
 
     @Comment("장바구니 항목 목록")
     @OneToMany(fetch = LAZY, mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<CartItemEntity> cartItems = new ArrayList<>();
 
     @PrePersist
@@ -65,6 +62,19 @@ public class CartEntity extends BaseEntity {
         if (this.name == null) {
             this.name = "기본";
         }
+    }
+
+    @Builder
+    private CartEntity(Long id, UserEntity user, String name, List<CartItemEntity> cartItems) {
+        this.id = id;
+        this.user = user;
+        this.name = name;
+        this.cartItems = cartItems;
+    }
+
+    // 기본값 설정을 위한 빌더 객체
+    public static class CartEntityBuilder {
+        private List<CartItemEntity> cartItems = new ArrayList<>();
     }
 
     public void changeCartItem(CartItemEntity cartItem) {
