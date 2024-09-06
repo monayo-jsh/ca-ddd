@@ -2,7 +2,6 @@ package com.clean.architecture.infrastructure.order.persistence.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
-import com.clean.architecture.infrastructure.shipment.persistence.entity.ShipmentEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -16,7 +15,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -54,14 +52,14 @@ public class OrderEntity {
     private LocalDateTime orderedAt;
 
     @Comment("주문상태")
-    @Column(name = "order_status", nullable = false, length = 20)
+    @Column(name = "status", nullable = false, length = 20)
     @ColumnDefault("'PENDING'")
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     @Comment("주문 총 가격")
-    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalPrice;
+    @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalAmount;
 
     @Comment("수정일시")
     @Column(name = "updated_at", nullable = false)
