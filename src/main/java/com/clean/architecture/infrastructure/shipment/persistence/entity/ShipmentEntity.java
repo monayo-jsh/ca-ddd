@@ -5,6 +5,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import com.clean.architecture.infrastructure.common.persistence.entity.AddressEntity;
 import com.clean.architecture.infrastructure.common.persistence.entity.BaseEntity;
 import com.clean.architecture.infrastructure.order.persistence.entity.OrderEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
@@ -14,8 +15,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,12 +53,18 @@ public class ShipmentEntity extends BaseEntity {
     @Embedded // 값 객체(Value Object) 엔티티의 컬럼으로 관리되어짐
     private AddressEntity address;
 
+    // 배송 상태 목록은 배송 테이블에서 라이프사이클을 관리함.
+    @Comment("배송 상태 목록")
+    @OneToMany(fetch = LAZY, mappedBy = "shipment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShipmentStatusEntity> statuses = new ArrayList<>();
+
     @Builder
-    private ShipmentEntity(Long id, OrderEntity order, String carrier, String trackingNumber, AddressEntity address) {
+    private ShipmentEntity(Long id, OrderEntity order, String carrier, String trackingNumber, AddressEntity address, List<ShipmentStatusEntity> statuses) {
         this.id = id;
         this.order = order;
         this.carrier = carrier;
         this.trackingNumber = trackingNumber;
         this.address = address;
+        this.statuses = statuses;
     }
 }
