@@ -1,13 +1,20 @@
 package com.clean.architecture.infrastructure.shipment.persistence.entity;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 import com.clean.architecture.infrastructure.common.persistence.entity.AddressEntity;
 import com.clean.architecture.infrastructure.common.persistence.entity.BaseEntity;
+import com.clean.architecture.infrastructure.order.persistence.entity.OrderEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,8 +33,9 @@ public class ShipmentEntity extends BaseEntity {
     private Long id;
 
     @Comment("주문 고유키(참조)")
-    @Column(name = "order_id", nullable = false)
-    private Long orderId;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT)) // 외래키 설정하지 않음
+    private OrderEntity order;
 
     @Comment("배송 업체")
     @Column(name = "carrier", nullable = false, length = 50)
@@ -42,9 +50,9 @@ public class ShipmentEntity extends BaseEntity {
     private AddressEntity address;
 
     @Builder
-    private ShipmentEntity(Long id, Long orderId, String carrier, String trackingNumber, AddressEntity address) {
+    private ShipmentEntity(Long id, OrderEntity order, String carrier, String trackingNumber, AddressEntity address) {
         this.id = id;
-        this.orderId = orderId;
+        this.order = order;
         this.carrier = carrier;
         this.trackingNumber = trackingNumber;
         this.address = address;
