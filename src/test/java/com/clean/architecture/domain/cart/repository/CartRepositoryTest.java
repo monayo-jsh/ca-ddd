@@ -15,6 +15,7 @@ import com.clean.architecture.utils.TestUserEntityFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+import org.hibernate.proxy.HibernateProxy;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -77,9 +78,13 @@ class CartRepositoryTest {
             // That
             assertThat(foundCartEntity).isNotNull();
 
-            assertThat(foundCartEntity.getUser()).isNotNull();
+            // 지연 로딩인가 ?
+            assertThat(foundCartEntity.getUser()).isInstanceOf(HibernateProxy.class);
+
+            // 사용자 매핑 검증
             assertThat(foundCartEntity.getUser().getId()).isEqualTo(tempUserEntity.getId());
 
+            // 하위 항목 검증
             assertThat(foundCartEntity.getCartItems()).isEmpty();
         }
 
@@ -102,9 +107,13 @@ class CartRepositoryTest {
 
             assertThat(foundCartEntity).isNotNull();
 
-            assertThat(foundCartEntity.getUser()).isNotNull();
+            // 지연 로딩인가 ?
+            assertThat(foundCartEntity.getUser()).isInstanceOf(HibernateProxy.class);
+
+            // 사용자 매핑 검증
             assertThat(foundCartEntity.getUser().getId()).isEqualTo(cartEntity.getUser().getId());
 
+            // 하위 항목 검증
             assertThat(foundCartEntity.getCartItems().size()).isEqualTo(cartItemEntities.size());
             foundCartEntity.getCartItems().forEach(cartItem -> {
                 assertThat(cartItem.getId()).isNotNull();

@@ -18,6 +18,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
+import org.hibernate.proxy.HibernateProxy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -99,11 +100,14 @@ class ProductRepositoryTest {
             for (ProductEntity productEntity : productEntities) {
 
                 // 카테고리 조회 확인
-                assertThat(productEntity.getCategory()).isNotNull();
+                // 즉시 로딩되었는가 ?
+                assertThat(productEntity.getCategory()).isNotInstanceOf(HibernateProxy.class);
+                // 아이디값이 정상적인가
                 assertThat(productEntity.getCategory().getId()).isNotNull();
 
                 // 이미지 확인
-                assertThat(productEntity.getImages()).isNotEmpty();
+                // 이미지 객체가 존재하는가 ?
+                assertThat(productEntity.getImages().size()).isNotZero();
             }
 
 
@@ -126,7 +130,9 @@ class ProductRepositoryTest {
             for (ProductEntity productEntity : productEntities) {
 
                 // 카테고리 조회 확인
-                assertThat(productEntity.getCategory()).isNotNull();
+                // 즉시 로딩되었는가 ?
+                assertThat(productEntity.getCategory()).isNotInstanceOf(HibernateProxy.class);
+                // 아이디값이 정상적인가
                 assertThat(productEntity.getCategory().getId()).isNotNull();
 
                 // 이미지 확인
@@ -155,7 +161,9 @@ class ProductRepositoryTest {
             for (ProductEntity productEntity : productEntities) {
 
                 // 카테고리 조회 확인
-                assertThat(productEntity.getCategory()).isNotNull();
+                // 즉시 로딩되었는가 ?
+                assertThat(productEntity.getCategory()).isNotInstanceOf(HibernateProxy.class);
+                // 아이디값이 정상적인가
                 assertThat(productEntity.getCategory().getId()).isEqualTo(lastCategoryEntity.getId());
 
                 // 이미지 확인
