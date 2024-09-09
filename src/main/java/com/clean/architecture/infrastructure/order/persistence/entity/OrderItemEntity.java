@@ -52,4 +52,8 @@ public class OrderItemEntity {
         this.product = product;
         this.quantity = quantity;
     }
+
+    public void changeProduct(OrderEntity orderEntity) {
+        this.order = orderEntity;
+    }
 }

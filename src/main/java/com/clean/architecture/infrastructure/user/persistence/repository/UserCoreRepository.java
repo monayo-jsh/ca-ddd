@@ -43,6 +43,7 @@ public class UserCoreRepository implements UserRepository {
         return jpaUserRepository.findById(userId);
     }
 
+    @Override
     public void updateStatus(UserStatusUpdateRequest user) {
         jpaUserCustomRepository.updateStatus(user);
     }

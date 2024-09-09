@@ -1,4 +1,4 @@
-package com.clean.architecture.infrastructure.user.persistence.repository;
+package com.clean.architecture.domain.user.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,9 +8,9 @@ import com.clean.architecture.infrastructure.user.persistence.dto.UserStatusUpda
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserStatus;
 import com.clean.architecture.infrastructure.user.persistence.mapper.UserUpdateRequestMapper;
+import com.clean.architecture.utils.TestUserEntityFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,14 +25,14 @@ import org.springframework.context.annotation.Import;
 @ComponentScan(
     basePackages = "com.clean.architecture.infrastructure.user.persistence"
 )
-@DisplayName("사용자 JPA 테스트")
-class UserCoreRepositoryTest {
+@DisplayName("사용자 레포지토리 테스트")
+class UserRepositoryTest {
 
     @Autowired
     private EntityManager entityManager;
 
     @Autowired
-    private UserCoreRepository userCoreRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private UserUpdateRequestMapper userUpdateRequestMapper;
@@ -40,17 +40,8 @@ class UserCoreRepositoryTest {
     private UserEntity tempUserEntity;
 
     @BeforeEach
-    public void init() {
-        Long userSeq = new Random().nextLong();
-
-        tempUserEntity = UserEntity.builder()
-                                   .username("username-%s".formatted(userSeq))
-                                   .password("encrypt-password")
-                                   .email("email@google.com")
-                                   .phoneNumber("01012345678")
-                                   .status(UserStatus.ACTIVE)
-                                   .statusChangedAt(LocalDateTime.now())
-                                   .build();
+    public void setup() {
+        tempUserEntity = TestUserEntityFactory.createTestUser();
     }
 
     @Nested
@@ -61,13 +52,13 @@ class UserCoreRepositoryTest {
         @DisplayName("저장 성공")
         void testSaveUser() {
             // Given, // When
-            UserEntity saveUser = userCoreRepository.save(tempUserEntity);
+            UserEntity saveUser = userRepository.save(tempUserEntity);
 
             // 영속성 초기화해서 조회할 수 있도록 설정
             entityManager.clear();
 
             // When
-            UserEntity foundUserEntity = userCoreRepository.findById(saveUser.getId()).orElse(null);
+            UserEntity foundUserEntity = userRepository.findById(saveUser.getId()).orElse(null);
 
             // 테스트를 위해 신규 객체 확인
             assertThat(foundUserEntity).isNotEqualTo(saveUser);
@@ -98,13 +89,13 @@ class UserCoreRepositoryTest {
         @DisplayName("이메일 조회")
         void findByEmail() {
             // Given
-            userCoreRepository.save(tempUserEntity);
+            userRepository.save(tempUserEntity);
 
             // 영속성 초기화해서 조회할 수 있도록 설정
             entityManager.clear();
 
             // When
-            UserEntity foundUserEntity = userCoreRepository.findByEmail(tempUserEntity.getEmail()).orElse(null);
+            UserEntity foundUserEntity = userRepository.findByEmail(tempUserEntity.getEmail()).orElse(null);
 
             // Then
             assertThat(foundUserEntity).isNotNull();
@@ -122,7 +113,7 @@ class UserCoreRepositoryTest {
         void testUpdateUserStatus() {
 
             // Given
-            UserEntity saveUserEntity = userCoreRepository.save(tempUserEntity);
+            UserEntity saveUserEntity = userRepository.save(tempUserEntity);
 
             // 영속성 초기화해서 조회할 수 있도록 설정
             entityManager.clear();
@@ -132,13 +123,13 @@ class UserCoreRepositoryTest {
             UserStatusUpdateRequest userStatusUpdateRequest = userUpdateRequestMapper.toStatusUpdateRequest(saveUserEntity);
             userStatusUpdateRequest.setStatus(UserStatus.INACTIVE);
             userStatusUpdateRequest.setStatusChangedAt(LocalDateTime.now());
-            userCoreRepository.updateStatus(userStatusUpdateRequest);
+            userRepository.updateStatus(userStatusUpdateRequest);
 
             // 영속성 초기화해서 조회할 수 있도록 설정
             entityManager.clear();
 
             // When
-            UserEntity foundUserEntity = userCoreRepository.findByEmail(tempUserEntity.getEmail()).orElse(null);
+            UserEntity foundUserEntity = userRepository.findByEmail(tempUserEntity.getEmail()).orElse(null);
 
             assertThat(foundUserEntity).isNotNull();
 

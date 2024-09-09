@@ -19,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -50,7 +50,6 @@ public class OrderEntity {
 
     @Comment("주문일시")
     @Column(name = "ordered_at", nullable = false, updatable = false)
-    @CreatedDate
     private LocalDateTime orderedAt;
 
     @Comment("주문상태")
@@ -83,4 +82,25 @@ public class OrderEntity {
         this.updatedAt = updatedAt;
     }
 
+    // 기본값 설정을 위한 빌더 객체
+    public static class OrderEntityBuilder {
+
+        private BigDecimal totalAmount = BigDecimal.ZERO.setScale(2, RoundingMode.UNNECESSARY);
+        private List<OrderItemEntity> items = new ArrayList<>();
+
+    }
+
+    private void addOrderItem(OrderItemEntity orderItemEntity) {
+        // 상품 가격 설정
+        BigDecimal itemTotalAmount = orderItemEntity.getProduct().getPrice().multiply(new BigDecimal(orderItemEntity.getQuantity()));
+        this.totalAmount = this.totalAmount.add(itemTotalAmount);
+
+        // 상품 추가
+        orderItemEntity.changeProduct(this);
+        this.items.add(orderItemEntity);
+    }
+
+    public void addOrderItems(List<OrderItemEntity> orderItemEntities) {
+        orderItemEntities.forEach(this::addOrderItem);
+    }
 }

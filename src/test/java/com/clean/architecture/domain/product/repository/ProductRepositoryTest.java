@@ -1,4 +1,4 @@
-package com.clean.architecture.infrastructure.product.persistence.repository;
+package com.clean.architecture.domain.product.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,8 +8,13 @@ import com.clean.architecture.infrastructure.common.persistence.entity.CommonSta
 import com.clean.architecture.infrastructure.product.persistence.entity.CategoryEntity;
 import com.clean.architecture.infrastructure.product.persistence.entity.ProductEntity;
 import com.clean.architecture.infrastructure.product.persistence.entity.ProductImageEntity;
+import com.clean.architecture.infrastructure.product.persistence.repository.JpaCategoryRepository;
+import com.clean.architecture.infrastructure.product.persistence.repository.JpaProductImageRepository;
+import com.clean.architecture.infrastructure.product.persistence.repository.JpaProductRepository;
+import com.clean.architecture.utils.TestCategoryEntityFactory;
+import com.clean.architecture.utils.TestProductEntityFactory;
+import com.clean.architecture.utils.TestProductImageEntityFactory;
 import jakarta.persistence.EntityManager;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -32,7 +37,7 @@ import org.springframework.data.domain.Pageable;
 class ProductRepositoryTest {
 
     @Autowired
-    private ProductCoreRepository productCoreRepository;
+    private ProductRepository productRepository;
 
     // 테스트 데이터 생성을 위한 인터페이스
     @Autowired
@@ -55,51 +60,23 @@ class ProductRepositoryTest {
     void setUp() {
         long productSeq = new Random().nextLong();
 
-        CategoryEntity parentCategoryEntity = makeTempCategory("음식", null);
+        CategoryEntity parentCategoryEntity = TestCategoryEntityFactory.createTestCategoryEntity("음식", null);
         jpaCategoryRepository.save(parentCategoryEntity);
 
-        lastCategoryEntity = makeTempCategory("치킨", parentCategoryEntity);
+        lastCategoryEntity = TestCategoryEntityFactory.createTestCategoryEntity("치킨", parentCategoryEntity);
         jpaCategoryRepository.save(lastCategoryEntity);
 
 
-        ProductEntity productEntity = makeTempProduct(productSeq, lastCategoryEntity);
+        ProductEntity productEntity = TestProductEntityFactory.createTestProductEntity(productSeq, lastCategoryEntity);
         jpaProductRepository.save(productEntity);
 
         IntStream.range(0, 3).forEach(seq -> {
-            ProductImageEntity productImageEntity = makeTempProductImage(productEntity, seq);
+            ProductImageEntity productImageEntity = TestProductImageEntityFactory.createTestProductImageEntity(seq, productEntity);
             jpaProductImageRepository.save(productImageEntity);
         });
 
         // 영속성 컨테이너 초기화
         entityManager.clear();
-    }
-
-    private CategoryEntity makeTempCategory(String name, CategoryEntity parentCategory) {
-        return CategoryEntity.builder()
-                             .name(name)
-                             .status(CommonStatus.ACTIVE)
-                             .parent(parentCategory)
-                             .build();
-    }
-
-    private ProductEntity makeTempProduct(Long seq, CategoryEntity categoryEntity) {
-        return ProductEntity.builder()
-                            .name("product-%s".formatted(seq))
-                            .description("description-%s".formatted(seq))
-                            .price(BigDecimal.valueOf(100))
-                            .stockQuantity(10)
-                            .category(categoryEntity)
-                            .build();
-    }
-
-    private ProductImageEntity makeTempProductImage(ProductEntity productEntity, Integer seq) {
-        return ProductImageEntity.builder()
-                                 .product(productEntity)
-                                 .imageUrl("image-url-%s".formatted(seq))
-                                 .altText("image-alt-text-%s".formatted(seq))
-                                 .sortOrder(seq)
-                                 .status(seq % 2 == 0 ? CommonStatus.ACTIVE : CommonStatus.INACTIVE)
-                                 .build();
     }
 
     @Nested
@@ -112,7 +89,7 @@ class ProductRepositoryTest {
             // given
 
             // when
-            List<ProductEntity> productEntities = productCoreRepository.findAll();
+            List<ProductEntity> productEntities = productRepository.findAll();
 
             // then
 
@@ -139,7 +116,7 @@ class ProductRepositoryTest {
             Pageable pageable = Pageable.ofSize(10);
 
             // when
-            List<ProductEntity> productEntities = productCoreRepository.findAll(pageable);
+            List<ProductEntity> productEntities = productRepository.findAll(pageable);
 
             // then
 
@@ -169,7 +146,7 @@ class ProductRepositoryTest {
             Pageable pageable = Pageable.ofSize(10);
 
             // when
-            List<ProductEntity> productEntities = productCoreRepository.findAllByCategoryId(lastCategoryEntity.getId(), pageable);
+            List<ProductEntity> productEntities = productRepository.findAllByCategoryId(lastCategoryEntity.getId(), pageable);
 
             // then
             // 조회 결과가 존재하는지
@@ -204,7 +181,7 @@ class ProductRepositoryTest {
             Pageable pageable = Pageable.ofSize(1);
 
             // when
-            List<ProductEntity> productEntities = productCoreRepository.findAllByCategoryId(lastCategoryEntity.getId(), pageable);
+            List<ProductEntity> productEntities = productRepository.findAllByCategoryId(lastCategoryEntity.getId(), pageable);
 
             // then
             // 조회 결과가 존재하는지
@@ -219,7 +196,7 @@ class ProductRepositoryTest {
             entityManager.flush();
             entityManager.clear();
 
-            List<ProductEntity> foundProductEntities = productCoreRepository.findAllByCategoryId(lastCategoryEntity.getId(), pageable);
+            List<ProductEntity> foundProductEntities = productRepository.findAllByCategoryId(lastCategoryEntity.getId(), pageable);
             assertThat(foundProductEntities).isNotEmpty();
 
             ProductEntity foundProductEntity = foundProductEntities.get(0);
@@ -235,7 +212,7 @@ class ProductRepositoryTest {
             Pageable pageable = Pageable.ofSize(1);
 
             // when
-            List<ProductEntity> productEntities = productCoreRepository.findAllByCategoryId(lastCategoryEntity.getId(), pageable);
+            List<ProductEntity> productEntities = productRepository.findAllByCategoryId(lastCategoryEntity.getId(), pageable);
 
             // then
             // 조회 결과가 존재하는지

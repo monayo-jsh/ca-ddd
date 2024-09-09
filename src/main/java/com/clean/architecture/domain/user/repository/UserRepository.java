@@ -1,5 +1,6 @@
 package com.clean.architecture.domain.user.repository;
 
+import com.clean.architecture.infrastructure.user.persistence.dto.UserStatusUpdateRequest;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import java.util.Optional;
 
@@ -11,4 +12,5 @@ public interface UserRepository {
     Optional<UserEntity> findByEmail(String email);
     boolean existsByEmail(String email);
 
+    void updateStatus(UserStatusUpdateRequest userStatusUpdateRequest);
 }

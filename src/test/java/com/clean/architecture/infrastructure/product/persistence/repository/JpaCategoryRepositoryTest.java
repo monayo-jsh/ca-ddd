@@ -6,6 +6,7 @@ import com.clean.architecture.config.JpaAuditingConfig;
 import com.clean.architecture.config.QueryDSLConfig;
 import com.clean.architecture.infrastructure.common.persistence.entity.CommonStatus;
 import com.clean.architecture.infrastructure.product.persistence.entity.CategoryEntity;
+import com.clean.architecture.utils.TestCategoryEntityFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +21,7 @@ import org.springframework.context.annotation.Import;
 @ComponentScan(basePackages = {
     "com.clean.architecture.infrastructure.product"
 })
-@DisplayName("카테고리 조회 JPA 테스트")
+@DisplayName("카테고리 레포지토리 테스트")
 class JpaCategoryRepositoryTest {
 
     @Autowired
@@ -34,13 +35,13 @@ class JpaCategoryRepositoryTest {
     void findEntityGraph() {
 
         // given
-        CategoryEntity categoryEntity1 = makeTempCategory("한국", null, CommonStatus.ACTIVE);
+        CategoryEntity categoryEntity1 = TestCategoryEntityFactory.createTestCategoryEntity("한국", null);
         jpaCategoryRepository.save(categoryEntity1);
 
-        CategoryEntity categoryEntity2 = makeTempCategory("음식", categoryEntity1, CommonStatus.ACTIVE);
+        CategoryEntity categoryEntity2 = TestCategoryEntityFactory.createTestCategoryEntity("음식", categoryEntity1);
         jpaCategoryRepository.save(categoryEntity2);
 
-        CategoryEntity categoryEntity3 = makeTempCategory("치킨", categoryEntity2, CommonStatus.ACTIVE);
+        CategoryEntity categoryEntity3 = TestCategoryEntityFactory.createTestCategoryEntity("치킨", categoryEntity2);
         jpaCategoryRepository.save(categoryEntity3);
 
         entityManager.clear();
@@ -66,13 +67,13 @@ class JpaCategoryRepositoryTest {
     void findWithRecursive() {
 
         // given
-        CategoryEntity categoryEntity1 = makeTempCategory("한국", null, CommonStatus.ACTIVE);
+        CategoryEntity categoryEntity1 = TestCategoryEntityFactory.createTestCategoryEntity("한국", null);
         jpaCategoryRepository.save(categoryEntity1);
 
-        CategoryEntity categoryEntity2 = makeTempCategory("음식", categoryEntity1, CommonStatus.INACTIVE);
+        CategoryEntity categoryEntity2 = TestCategoryEntityFactory.createTestCategoryEntity("음식", CommonStatus.INACTIVE, categoryEntity1);
         jpaCategoryRepository.save(categoryEntity2);
 
-        CategoryEntity categoryEntity3 = makeTempCategory("치킨", categoryEntity2, CommonStatus.ACTIVE);
+        CategoryEntity categoryEntity3 = TestCategoryEntityFactory.createTestCategoryEntity("치킨", categoryEntity2);
         jpaCategoryRepository.save(categoryEntity3);
 
         entityManager.clear();
@@ -90,11 +91,4 @@ class JpaCategoryRepositoryTest {
         // 쿼리 1번만 수행되었는지 확인
     }
 
-    private CategoryEntity makeTempCategory(String name, CategoryEntity parentCategory, CommonStatus status) {
-        return CategoryEntity.builder()
-                             .name(name)
-                             .status(status)
-                             .parent(parentCategory)
-                             .build();
-    }
 }
