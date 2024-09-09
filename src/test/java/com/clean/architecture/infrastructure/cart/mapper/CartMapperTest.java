@@ -7,6 +7,7 @@ import com.clean.architecture.domain.cart.model.CartItem;
 import com.clean.architecture.domain.user.model.User;
 import com.clean.architecture.infrastructure.cart.persistence.entity.CartEntity;
 import com.clean.architecture.infrastructure.cart.persistence.entity.CartItemEntity;
+import com.clean.architecture.infrastructure.product.persistence.entity.ProductEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -117,9 +118,9 @@ class CartMapperTest {
         // Given
         CartEntity cartEntity = CartEntity.builder().id(1L).user(tempUserEntity).build();
         List<CartItemEntity> cartItemEntities = List.of(
-            CartItemEntity.builder().id(100L).productId(1L).quantity(1).build(),
-            CartItemEntity.builder().id(200L).productId(2L).quantity(2).build(),
-            CartItemEntity.builder().id(300L).productId(3L).quantity(3).build()
+            CartItemEntity.builder().id(100L).product(ProductEntity.builder().id(1L).build()).quantity(1).build(),
+            CartItemEntity.builder().id(200L).product(ProductEntity.builder().id(2L).build()).quantity(2).build(),
+            CartItemEntity.builder().id(300L).product(ProductEntity.builder().id(3L).build()).quantity(3).build()
         );
         cartEntity.changeCartItems(cartItemEntities);
 

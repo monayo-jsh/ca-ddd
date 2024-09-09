@@ -36,7 +36,6 @@ public class UserEntity extends BaseEntity {
     @Comment("사용자 이름")
     @Column(name = "username", nullable = false, length = 50)
     private String username;
-
     @Comment("사용자 패스워드(암호화)")
     @Column(name = "password", nullable = false, length = 100)
     private String password;

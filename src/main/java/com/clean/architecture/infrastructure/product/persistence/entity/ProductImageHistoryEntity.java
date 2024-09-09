@@ -23,10 +23,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter @NoArgsConstructor
-@Comment("상품이미지 이력 테이블")
 @Entity
 @Table(name = "tb_product_image_history")
 @EntityListeners(AuditingEntityListener.class)
+@Comment("상품이미지 이력 테이블")
 public class ProductImageHistoryEntity {
 
     @Comment("상품이미지 이력 고유키")
@@ -34,6 +34,7 @@ public class ProductImageHistoryEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 조회만 제공
     @Comment("상품 이력 고유키")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_history_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))

@@ -33,6 +33,7 @@ public class ProductImageEntity extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 조회만 제공
     @Comment("상품 고유키")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))

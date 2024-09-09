@@ -7,6 +7,7 @@ import com.clean.architecture.config.JpaAuditingConfig;
 import com.clean.architecture.config.QueryDSLConfig;
 import com.clean.architecture.infrastructure.cart.persistence.entity.CartEntity;
 import com.clean.architecture.infrastructure.cart.persistence.entity.CartItemEntity;
+import com.clean.architecture.infrastructure.product.persistence.entity.ProductEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserStatus;
 import com.clean.architecture.infrastructure.user.persistence.repository.JpaUserRepository;
@@ -97,9 +98,9 @@ class CartCoreRepositoryTest {
         void testSaveCartWithItems() {
             // Given
             List<CartItemEntity> cartItemEntities = List.of(
-                CartItemEntity.builder().productId(100L).quantity(1).build(),
-                CartItemEntity.builder().productId(200L).quantity(2).build(),
-                CartItemEntity.builder().productId(300L).quantity(3).build()
+                CartItemEntity.builder().product(ProductEntity.builder().id(100L).build()).quantity(1).build(),
+                CartItemEntity.builder().product(ProductEntity.builder().id(200L).build()).quantity(2).build(),
+                CartItemEntity.builder().product(ProductEntity.builder().id(300L).build()).quantity(3).build()
             );
             CartEntity cartEntity = CartEntity.builder().user(tempUserEntity).build();
             cartEntity.changeCartItems(cartItemEntities);
@@ -222,9 +223,9 @@ class CartCoreRepositoryTest {
 
             // Given
             List<CartItemEntity> cartItemEntities = List.of(
-                CartItemEntity.builder().productId(100L).quantity(1).build(),
-                CartItemEntity.builder().productId(200L).quantity(2).build(),
-                CartItemEntity.builder().productId(300L).quantity(3).build()
+                CartItemEntity.builder().product(ProductEntity.builder().id(100L).build()).quantity(1).build(),
+                CartItemEntity.builder().product(ProductEntity.builder().id(200L).build()).quantity(2).build(),
+                CartItemEntity.builder().product(ProductEntity.builder().id(300L).build()).quantity(3).build()
             );
             CartEntity cartEntity = CartEntity.builder().user(tempUserEntity).build();
             cartEntity.changeCartItems(cartItemEntities);

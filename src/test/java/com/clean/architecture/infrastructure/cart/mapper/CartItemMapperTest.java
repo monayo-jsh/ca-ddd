@@ -6,6 +6,7 @@ import com.clean.architecture.domain.cart.model.Cart;
 import com.clean.architecture.domain.cart.model.CartItem;
 import com.clean.architecture.infrastructure.cart.persistence.entity.CartEntity;
 import com.clean.architecture.infrastructure.cart.persistence.entity.CartItemEntity;
+import com.clean.architecture.infrastructure.product.persistence.entity.ProductEntity;
 import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class CartItemMapperTest {
     void testToDomain() {
 
         // Given
-        CartItemEntity cartItemEntity = CartItemEntity.builder().id(100L).productId(1L).quantity(1).build();
+        CartItemEntity cartItemEntity = CartItemEntity.builder().id(100L).product(ProductEntity.builder().id(100L).build()).quantity(1).build();
 
         // Then
         CartItem cartItem = cartItemMapper.toDomain(cartItemEntity);
@@ -36,7 +37,7 @@ class CartItemMapperTest {
         assertThat(cartItem).isNotNull();
 
         assertThat(cartItem.getId()).isEqualTo(cartItemEntity.getId());
-        assertThat(cartItem.getProductId()).isEqualTo(cartItemEntity.getProductId());
+        assertThat(cartItem.getProductId()).isEqualTo(cartItemEntity.getProduct().getId());
         assertThat(cartItem.getQuantity()).isEqualTo(cartItemEntity.getQuantity());
 
     }
@@ -47,7 +48,7 @@ class CartItemMapperTest {
 
         // Given
         CartEntity cartEntity = CartEntity.builder().id(1L).build();
-        CartItemEntity cartItemEntity = CartItemEntity.builder().id(100L).productId(1L).quantity(1).build();
+        CartItemEntity cartItemEntity = CartItemEntity.builder().id(100L).product(ProductEntity.builder().id(100L).build()).quantity(1).build();
         cartItemEntity.changeCart(cartEntity);
 
         // Then
@@ -57,7 +58,7 @@ class CartItemMapperTest {
         assertThat(cartItem).isNotNull();
 
         assertThat(cartItem.getId()).isEqualTo(cartItemEntity.getId());
-        assertThat(cartItem.getProductId()).isEqualTo(cartItemEntity.getProductId());
+        assertThat(cartItem.getProductId()).isEqualTo(cartItemEntity.getProduct().getId());
         assertThat(cartItem.getQuantity()).isEqualTo(cartItemEntity.getQuantity());
 
         assertThat(cartItem.getCartId()).isNotNull();
@@ -69,7 +70,7 @@ class CartItemMapperTest {
     @DisplayName("to 엔티티 (연관 관계 없는 경우)")
     void testToEntity() {
         // Given
-        CartItem cartItem = CartItem.create(100L, 1000L, 1);
+        CartItem cartItem = CartItem.create(100L, 100L, 1);
 
         // Then
         CartItemEntity cartItemEntity = cartItemMapper.toEntity(cartItem);
@@ -78,18 +79,18 @@ class CartItemMapperTest {
         assertThat(cartItemEntity).isNotNull();
 
         assertThat(cartItemEntity.getId()).isEqualTo(cartItem.getId());
-        assertThat(cartItemEntity.getProductId()).isEqualTo(cartItem.getProductId());
+        assertThat(cartItemEntity.getProduct().getId()).isEqualTo(cartItem.getProductId());
         assertThat(cartItemEntity.getQuantity()).isEqualTo(cartItem.getQuantity());
 
         assertThat(cartItemEntity.getCart()).isNull();
     }
 
     @Test
-    @DisplayName("to 엔티티 (연관 관계 있는 경우")
+    @DisplayName("to 엔티티 (연관 관계 있는 경우)")
     void testToEntityWithCart() {
         // Given
         Cart cart = Cart.create(1L, null, null, Collections.emptyList());
-        CartItem cartItem = CartItem.create(100L, cart.getId(), 2L, 2);
+        CartItem cartItem = CartItem.create(100L, cart.getId(), 200L, 2);
 
         // Then
         CartItemEntity cartItemEntity = cartItemMapper.toEntity(cartItem);
@@ -98,7 +99,7 @@ class CartItemMapperTest {
         assertThat(cartItemEntity).isNotNull();
 
         assertThat(cartItemEntity.getId()).isEqualTo(cartItem.getId());
-        assertThat(cartItemEntity.getProductId()).isEqualTo(cartItem.getProductId());
+        assertThat(cartItemEntity.getProduct().getId()).isEqualTo(cartItem.getProductId());
         assertThat(cartItemEntity.getQuantity()).isEqualTo(cartItem.getQuantity());
 
         assertThat(cartItemEntity.getCart()).isNull();

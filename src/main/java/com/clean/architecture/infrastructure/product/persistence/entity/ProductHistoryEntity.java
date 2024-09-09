@@ -18,6 +18,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,10 +28,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter @NoArgsConstructor
-@Comment("상품 이력 테이블")
 @Entity
 @Table(name = "tb_product_history")
 @EntityListeners(AuditingEntityListener.class)
+@Comment("상품 이력 테이블")
 public class ProductHistoryEntity {
 
     @Comment("상품 이력 고유키")
@@ -38,6 +39,7 @@ public class ProductHistoryEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 조회만 제공
     @Comment("상품 고유키(참조)")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -60,9 +62,11 @@ public class ProductHistoryEntity {
     @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private CategoryEntity category;
 
+    // API 에서는 조회만 제공해야함.
+    // 상품 이미지의 주인은 이미지 테이블이지만, 상품이 있고 이미지가 있기에 상품 엔티티에서 라이프 사이클을 관리함.
     @Comment("상품 이미지 이력 목록")
     @OneToMany(fetch = LAZY, mappedBy = "productHistory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImageHistoryEntity> images;
+    private List<ProductImageHistoryEntity> images = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -23,7 +23,6 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
 @Getter @NoArgsConstructor
@@ -42,6 +41,7 @@ public class CartEntity extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 단순 조회용
     @Comment("사용자 고유키(참조)")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -49,9 +49,9 @@ public class CartEntity extends BaseEntity {
 
     @Comment("장바구니 이름")
     @Column(name = "name", nullable = false, length = 50)
-    @ColumnDefault("'기본'")
     private String name;
 
+    // 장바구니 항목은 장바구니에서 라이프사이클을 관리함.
     @Comment("장바구니 항목 목록")
     @OneToMany(fetch = LAZY, mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItemEntity> cartItems = new ArrayList<>();

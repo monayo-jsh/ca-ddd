@@ -1,5 +1,8 @@
 package com.clean.architecture.infrastructure.payment.persistence.entity;
 
+import static jakarta.persistence.FetchType.LAZY;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,8 +10,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,11 +45,18 @@ public class PaymentEntity {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
+    // 결제 분할 정보는 결제에서 라이프 사이클을 관리함.
+    @Comment("결제 분할 정보")
+    @OneToMany(fetch = LAZY, mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PaymentPartEntity> parts = new ArrayList<>();
+
     @Builder
-    private PaymentEntity(Long id, Long orderId, BigDecimal totalAmount, PaymentStatus status) {
+    private PaymentEntity(Long id, Long orderId, BigDecimal totalAmount, PaymentStatus status, List<PaymentPartEntity> parts) {
         this.id = id;
         this.orderId = orderId;
         this.totalAmount = totalAmount;
         this.status = status;
+        this.parts = parts;
     }
+
 }

@@ -14,10 +14,12 @@ public interface CartItemMapper {
 
     // Entity -> Domain Model Mapping
     @Mapping(target = "cartId", source = "cart.id")
+    @Mapping(target = "productId", source = "product.id")
     CartItem toDomain(CartItemEntity source);
 
     // Domain Model -> Entity Mapping
     @Mapping(target = "cart", ignore = true) // cart는 매핑하지 않음
+    @Mapping(target = "product.id", source = "productId") // cart는 매핑하지 않음
     CartItemEntity toEntity(CartItem source);
 
 }

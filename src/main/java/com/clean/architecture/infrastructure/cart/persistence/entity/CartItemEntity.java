@@ -2,6 +2,7 @@ package com.clean.architecture.infrastructure.cart.persistence.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+import com.clean.architecture.infrastructure.product.persistence.entity.ProductEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -30,24 +31,27 @@ public class CartItemEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 단순 조회용
     @Comment("장바구니 고유키(참조)")
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "cart_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT)) // 외래키 조건은 부여하지 않음
     private CartEntity cart;
 
+    // 단순 조회용
     @Comment("상품 고유키(참조)")
-    @Column(name = "product_id", nullable = false)
-    private Long productId; // 상품 엔티티를 직접 참조하지 않고 느슨한 결합
+    @ManyToOne(fetch = LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT)) // 외래키 조건은 부여하지 않음
+    private ProductEntity product;
 
     @Comment("선택된 상품 수량")
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
     @Builder
-    private CartItemEntity(Long id, CartEntity cart, Long productId, int quantity) {
+    private CartItemEntity(Long id, CartEntity cart, ProductEntity product, int quantity) {
         this.id = id;
         this.cart = cart;
-        this.productId = productId;
+        this.product = product;
         this.quantity = quantity;
     }
 

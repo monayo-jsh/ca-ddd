@@ -32,6 +32,7 @@ public class PaymentPartEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 단순 조회용
     @Comment("결제 고유키(참조)")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "payment_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))

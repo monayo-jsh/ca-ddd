@@ -1,7 +1,9 @@
 package com.clean.architecture.infrastructure.shipment.persistence.entity;
 
+import com.clean.architecture.infrastructure.common.persistence.entity.AddressEntity;
 import com.clean.architecture.infrastructure.common.persistence.entity.BaseEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,15 +38,15 @@ public class ShipmentEntity extends BaseEntity {
     private String trackingNumber;
 
     @Comment("배송 주소")
-    @Column(name = "shipping_address", nullable = false, length = 255)
-    private String shippingAddress;
+    @Embedded // 값 객체(Value Object) 엔티티의 컬럼으로 관리되어짐
+    private AddressEntity address;
 
     @Builder
-    private ShipmentEntity(Long id, Long orderId, String carrier, String trackingNumber, String shippingAddress) {
+    private ShipmentEntity(Long id, Long orderId, String carrier, String trackingNumber, AddressEntity address) {
         this.id = id;
         this.orderId = orderId;
         this.carrier = carrier;
         this.trackingNumber = trackingNumber;
-        this.shippingAddress = shippingAddress;
+        this.address = address;
     }
 }
