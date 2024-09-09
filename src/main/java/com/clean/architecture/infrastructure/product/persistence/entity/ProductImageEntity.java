@@ -67,4 +67,9 @@ public class ProductImageEntity extends BaseEntity {
         this.sortOrder = sortOrder;
         this.status = status;
     }
+
+    // 조회만 제공하려면 해당 엔티티에 대한 수정 메서드는 제공하지 않는게 바람직함.
+//    public void changeProduct(ProductEntity productEntity) {
+//        this.product = productEntity;
+//    }
 }

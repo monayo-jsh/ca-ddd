@@ -56,7 +56,7 @@ public class ProductEntity extends BaseEntity {
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
-    // 조회만 제공
+    // 조회만 제공 - 수정메서드 제공 X
     @Comment("상품 카테고리 고유키(참조)")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
