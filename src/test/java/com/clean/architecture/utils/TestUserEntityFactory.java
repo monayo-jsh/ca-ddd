@@ -3,16 +3,13 @@ package com.clean.architecture.utils;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserStatus;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 public class TestUserEntityFactory {
 
-    public static UserEntity createTestUser() {
-        Long userSeq = new Random().nextLong();
-
+    public static UserEntity createTestUser(Long seq) {
         return UserEntity.builder()
-                         .id(userSeq)
-                         .username("username-%s".formatted(userSeq))
+                         .id(seq)
+                         .username("username-%s".formatted(seq == null ? "" : seq))
                          .password("encrypt-password")
                          .email("email@google.com")
                          .phoneNumber("01012345678")
@@ -21,4 +18,7 @@ public class TestUserEntityFactory {
                          .build();
     }
 
+    public static UserEntity createTestUser() {
+        return createTestUser(null);
+    }
 }
