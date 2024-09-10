@@ -2,18 +2,23 @@ package com.clean.architecture.infrastructure.payment.persistence.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+import com.clean.architecture.infrastructure.order.persistence.entity.OrderEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
@@ -32,9 +37,11 @@ public class PaymentEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 단순 참조용
     @Comment("주문 고유키")
-    @Column(name = "order_id", nullable = false)
-    private Long orderId;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT)) // 외래키 제약조건 부여하지 않음
+    private OrderEntity order;
 
     @Comment("총 결제 금액")
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
@@ -51,12 +58,29 @@ public class PaymentEntity {
     private List<PaymentPartEntity> parts = new ArrayList<>();
 
     @Builder
-    private PaymentEntity(Long id, Long orderId, BigDecimal totalAmount, PaymentStatus status, List<PaymentPartEntity> parts) {
+    private PaymentEntity(Long id, OrderEntity order, BigDecimal totalAmount, PaymentStatus status, List<PaymentPartEntity> parts) {
         this.id = id;
-        this.orderId = orderId;
+        this.order = order;
         this.totalAmount = totalAmount;
         this.status = status;
         this.parts = parts;
+    }
+
+    // 초기화 설정을 위한 빌더 객체
+    public static class PaymentEntityBuilder {
+
+        private BigDecimal totalAmount = BigDecimal.ZERO.setScale(2, RoundingMode.UNNECESSARY);
+        private List<PaymentPartEntity> parts = new ArrayList<>();
+
+    }
+
+    public void addPaymentPart(PaymentPartEntity paymentPartEntity) {
+        this.parts.add(paymentPartEntity);
+        paymentPartEntity.changePayment(this);
+    }
+
+    public void addPaymentParts(List<PaymentPartEntity> paymentPartEntities) {
+        paymentPartEntities.forEach(this::addPaymentPart);
     }
 
 }

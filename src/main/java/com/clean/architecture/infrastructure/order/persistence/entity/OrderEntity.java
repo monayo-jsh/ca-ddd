@@ -2,6 +2,7 @@ package com.clean.architecture.infrastructure.order.persistence.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+import com.clean.architecture.infrastructure.payment.persistence.entity.PaymentEntity;
 import com.clean.architecture.infrastructure.user.persistence.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -71,14 +73,20 @@ public class OrderEntity {
     @OneToMany(fetch = LAZY, mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemEntity> items = new ArrayList<>();
 
+    // 단순 조회용 - 결제 정보
+    @Comment("결제 정보")
+    @OneToOne(fetch = LAZY, mappedBy = "order")
+    private PaymentEntity payment;
+
     @Builder
-    private OrderEntity(Long id, UserEntity user, LocalDateTime orderedAt, OrderStatus status, BigDecimal totalAmount, List<OrderItemEntity> items, LocalDateTime updatedAt) {
+    private OrderEntity(Long id, UserEntity user, LocalDateTime orderedAt, OrderStatus status, BigDecimal totalAmount, List<OrderItemEntity> items, PaymentEntity payment, LocalDateTime updatedAt) {
         this.id = id;
         this.user = user;
         this.orderedAt = orderedAt;
         this.status = status;
         this.totalAmount = totalAmount;
         this.items = items;
+        this.payment = payment;
         this.updatedAt = updatedAt;
     }
 

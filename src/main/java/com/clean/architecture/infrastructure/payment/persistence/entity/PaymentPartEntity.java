@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,5 +59,14 @@ public class PaymentPartEntity {
         this.method = method;
         this.amount = amount;
         this.paidAt = paidAt;
+    }
+
+    public static class PaymentPartEntityBuilder {
+        private BigDecimal amount = BigDecimal.ZERO.setScale(2, RoundingMode.UNNECESSARY);
+    }
+
+    public void changePayment(PaymentEntity paymentEntity) {
+        // 결제 정보 변경 메서드는 결제 엔티티에서 호출되는 메서드로 직접 호출해서 사용하지 말 것.
+        this.payment = paymentEntity;
     }
 }
