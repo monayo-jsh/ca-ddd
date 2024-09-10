@@ -57,4 +57,8 @@ public class ShipmentStatusEntity {
         this.status = status;
         this.createdAt = createdAt;
     }
+
+    public void changeShipment(ShipmentEntity shipmentEntity) {
+        this.shipment = shipmentEntity;
+    }
 }

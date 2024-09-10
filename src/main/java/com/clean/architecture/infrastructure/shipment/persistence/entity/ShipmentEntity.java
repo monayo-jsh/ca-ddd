@@ -67,4 +67,18 @@ public class ShipmentEntity extends BaseEntity {
         this.address = address;
         this.statuses = statuses;
     }
+
+    // 기본값 설정을 위한 빌더 객체
+    public static class ShipmentEntityBuilder {
+        private List<ShipmentStatusEntity> statuses = new ArrayList<>();
+    }
+
+    public void addStatus(ShipmentStatusEntity shipmentStatusEntity) {
+        shipmentStatusEntity.changeShipment(this);
+        this.statuses.add(shipmentStatusEntity);
+    }
+    public void addStatuses(List<ShipmentStatusEntity> shipmentStatusEntities) {
+        shipmentStatusEntities.forEach(this::addStatus);
+    }
+
 }

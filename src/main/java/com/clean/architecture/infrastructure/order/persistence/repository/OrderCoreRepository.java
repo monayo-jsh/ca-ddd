@@ -18,7 +18,7 @@ public class OrderCoreRepository implements OrderRepository {
     @Override
     public Optional<OrderEntity> findById(Long orderId) {
         if (orderId == null) {
-            throw new IllegalArgumentException("orderId can be not null");
+            throw new IllegalArgumentException("orderId can not be null");
         }
 
         return jpaOrderCustomRepository.findById(orderId);
@@ -27,7 +27,7 @@ public class OrderCoreRepository implements OrderRepository {
     @Override
     public List<OrderEntity> findAllByUserId(Long userId, Pageable pageable) {
         if (userId == null) {
-            throw new IllegalArgumentException("userId can be not null");
+            throw new IllegalArgumentException("userId can not be null");
         }
 
         return jpaOrderRepository.findByUserId(userId, pageable);
