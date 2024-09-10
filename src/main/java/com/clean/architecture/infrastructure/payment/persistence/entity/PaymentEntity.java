@@ -74,6 +74,10 @@ public class PaymentEntity {
 
     }
 
+    public void changeStatus(PaymentStatus paymentStatus) {
+        this.status = paymentStatus;
+    }
+
     public void addPaymentPart(PaymentPartEntity paymentPartEntity) {
         this.parts.add(paymentPartEntity);
         paymentPartEntity.changePayment(this);
