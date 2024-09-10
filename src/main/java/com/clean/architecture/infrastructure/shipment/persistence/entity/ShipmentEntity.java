@@ -42,11 +42,11 @@ public class ShipmentEntity extends BaseEntity {
     private OrderEntity order;
 
     @Comment("배송 업체")
-    @Column(name = "carrier", nullable = false, length = 50)
+    @Column(name = "carrier", nullable = true, length = 50)
     private String carrier;
 
     @Comment("운송장 번호")
-    @Column(name = "tracking_number", nullable = false, length = 255)
+    @Column(name = "tracking_number", nullable = true, length = 255)
     private String trackingNumber;
 
     @Comment("배송 주소")
@@ -66,6 +66,24 @@ public class ShipmentEntity extends BaseEntity {
         this.trackingNumber = trackingNumber;
         this.address = address;
         this.statuses = statuses;
+    }
+
+    public void changeShipment(String carrier, String trackingNumber, ShipmentStatus shipmentStatus) {
+        if (carrier == null) { throw new IllegalArgumentException("carrier can not be null"); }
+        if (trackingNumber == null) { throw new IllegalArgumentException("trackingNumber can not be null"); }
+        if (shipmentStatus == null) { throw new IllegalArgumentException("shipmentStatus can not be null"); }
+
+        this.changeCarrier(carrier);
+        this.changeTrackingNumber(trackingNumber);
+        addStatus(ShipmentStatusEntity.builder().status(shipmentStatus).build());
+    }
+
+    private void changeCarrier(String carrier) {
+        this.carrier = carrier;
+    }
+
+    private void changeTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
     }
 
     // 기본값 설정을 위한 빌더 객체

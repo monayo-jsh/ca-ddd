@@ -10,8 +10,6 @@ public class TestShipmentEntityFactory {
         return ShipmentEntity.builder()
                              .id(id)
                              .order(orderEntity)
-                             .carrier("배송 업체명")
-                             .trackingNumber("운송장번호")
                              .address(AddressEntity.builder()
                                                    .zipCode("12345")
                                                    .roadAddress("도로명주소")
