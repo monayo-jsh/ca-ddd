@@ -53,13 +53,13 @@ class PaymentRepositoryTest {
 
     @Nested
     @DisplayName("결제 정보 생성")
-    class testCreate {
+    class createTests {
 
         @Test
         @DisplayName("기본 결제 생성")
         void createPayment() {
             // given
-            PaymentPartEntity testPaymentPartEntity = TestPaymentPartEntityFactory.createPaymentPartEntity(1L);
+            PaymentPartEntity testPaymentPartEntity = TestPaymentPartEntityFactory.createPaymentPartEntity(new Random().nextLong(1));
             PaymentEntity testPaymentEntity = TestPaymentEntityFactory.createTestPaymentEntity(testOrderEntity);
 
             // 연관관계 설정
@@ -93,13 +93,13 @@ class PaymentRepositoryTest {
 
     @Nested
     @DisplayName("결제 정보 수정")
-    class testUpdate {
+    class updateTests {
 
         @Test
         @DisplayName("결제 상태 변경")
         void updatePaymentStatus() {
             // given
-            PaymentPartEntity testPaymentPartEntity = TestPaymentPartEntityFactory.createPaymentPartEntity(1L);
+            PaymentPartEntity testPaymentPartEntity = TestPaymentPartEntityFactory.createPaymentPartEntity(new Random().nextLong(1));
             PaymentEntity testPaymentEntity = TestPaymentEntityFactory.createTestPaymentEntity(testOrderEntity);
 
             // 연관관계 설정
@@ -129,19 +129,22 @@ class PaymentRepositoryTest {
 
             // 업데이트 확인
             assertThat(updatePaymentEntity.getStatus()).isEqualTo(foundPaymentEntity.getStatus());
+
+            // 다른 필드는 변경되지 않았음을 확인
+            assertThat(updatePaymentEntity.getTotalAmount()).isEqualTo(foundPaymentEntity.getTotalAmount());
         }
 
     }
 
     @Nested
     @DisplayName("결제 정보 조회")
-    class testSearch {
+    class searchTests {
 
         @Test
         @DisplayName("주문 아이디로 조회")
         void findByOrderId() {
             // given
-            PaymentPartEntity testPaymentPartEntity = TestPaymentPartEntityFactory.createPaymentPartEntity(1L);
+            PaymentPartEntity testPaymentPartEntity = TestPaymentPartEntityFactory.createPaymentPartEntity(new Random().nextLong(1));
             PaymentEntity testPaymentEntity = TestPaymentEntityFactory.createTestPaymentEntity(testOrderEntity);
 
             // 연관관계 설정
@@ -160,6 +163,8 @@ class PaymentRepositoryTest {
 
             // 지연 로딩 확인
             assertThat(foundPaymentEntity.getOrder()).isInstanceOf(HibernateProxy.class);
+            // 쿼리 실행 확인 - 주문 아이디로 조회해서 일치해야함
+            assertThat(foundPaymentEntity.getOrder().getId()).isEqualTo(testOrderEntity.getId());
 
             // 데이터 상태 확인
             assertThat(foundPaymentEntity.getParts()).isNotEmpty();
